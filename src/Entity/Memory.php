@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MemoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MemoryRepository::class)]
 class Memory
@@ -15,7 +16,15 @@ class Memory
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
-    private ?string $title = null;
+
+    #[Assert\NotBlank(message: 'Le titre du Memory ne peut pas être vide')]
+    #[Assert\Length(
+        min: 2,
+        max: 150,
+        minMessage: "Le titre doit faire au moins {{ limit }} caractères",
+        maxMessage: "Le titre ne doit pas faire plus de {{ limit }} caractères"
+    )]
+    private $title;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;

@@ -34,13 +34,20 @@ class MemoryController extends AbstractController
         $memory = new Memory();
         $memoryForm = $this->createForm(AddMemoryType::class, $memory);
         $memoryForm->handleRequest($request);
-        
+
 
         if ($memoryForm->isSubmitted() && $memoryForm->isValid()) {
+
             $this->entityManager->persist($memory);
             $this->entityManager->flush();
 
+            $memory = new Memory();
+            $memoryForm = $this->createForm(AddMemoryType::class, $memory);
+
         }
+        
         return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'memoryForm' => $memoryForm->createView()]);
+        
+        
     }
 }
