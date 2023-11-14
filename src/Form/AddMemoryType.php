@@ -6,6 +6,8 @@ use App\Entity\Memory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+
 
 class AddMemoryType extends AbstractType
 {
@@ -13,8 +15,7 @@ class AddMemoryType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('description')
-        ;
+            ->add('description');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

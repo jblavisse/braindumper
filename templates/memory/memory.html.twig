@@ -1,21 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cave à idées !
-{% endblock %}
+{% block title %}Cave à idées !{% endblock %}
 
 {% block body %}
 	<h1>Bienvenue dans ta cave à idées !</h1>
 
-	{% include 'memory/_form.html.twig' %}
+	<h2>Ajouer un Memory</h2>
+
+	{{form_start(memoryForm)}}
+    {{ form_row(memoryForm.title) }}
+	{{ form_row(memoryForm.description) }}
+	    <button type="submit">Créer un Memory</button>
+	{{form_end(memoryForm)}}
+
+	
 	<ul>
 		{% for donnee in donnees %}
 			<li>
-				<h2>{{ donnee.title }}</h2>
+				<h3>{{ donnee.title }}</h3>
 
 				<div>{{donnee.description}}</div>
 			</li>
 		{% endfor %}
 	</ul>
-
 
 {% endblock %}
