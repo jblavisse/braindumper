@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cave à idées !
+{% endblock %}
+
+{% block body %}
+	<h1>Bienvenue dans ta cave à idées !</h1>
+
+	{% for donnee in donnees %}
+		<h2>{{ donnee.title }}</h2>
+
+        <div>{{donnee.description}}</h2>
+
+	{% endfor %}
+
+{% endblock %}
