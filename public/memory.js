@@ -23,16 +23,62 @@ function deleteMemory(url, dataId) {
 
 
 
-function changeTag(url, NameTag, classTag, bodyTag) {
+// function changeTag(url, nameTag, classTag, bodyTag) {
+
+//     console.log('Début de la fonction changeTag');
+//     const tag = document.querySelector(`${nameTag}.${classTag}`);
+
+//     console.log(tag)
+
+//     if (tag) {
+
+//         const initialContent = tag.innerHTML;
+
+//         const newTag = `<input type="text" class="${classTag}" value="${bodyTag}">`;
+
+//         console.log(newTag);
+//         tag.outerHTML = newTag;
+
+//         const updatedTag = document.querySelector(`.${classTag}`);
+
+//         console.log(updatedTag)
+
+//         updatedTag.focus();
+
+
+//         updatedTag.addEventListener('keydown', function (event) {
+//             if (event.key === 'Enter') {
+
+//                 const newValue = updatedTag.value
+//                 const response = updateAPI(url, newValue);
+
+//                 console.log('Nouvelle valeur reçue de updateAPI :', newValue);
+
+//                 if (response !== 'error') {
+//                     const tagChanged = `<${nameTag} class="${classTag}" onclick="changeTag(${url}, ${ nameTag }, ${classTag}, ${newValue})">${newValue}</${nameTag}>`;
+//                     console.log(tagChanged)
+//                     tag.outerHTML = tagChanged;
+//                 } else {
+//                     const tagUnchanged = `<${nameTag} class="${classTag}">${initialContent}</${nameTag}>`;
+//                     console.log(tagUnchanged)
+//                     tag.outerHTML = tagUnchanged;
+//                     console.error(response);
+//                 }
+//             }
+//         });
+//     } else {
+//         console.error('Aucun élément avec la classe spécifiée trouvé.');
+//     }
+// }
+
+function changeTag(url, nameTag, classTag, bodyTag) {
 
     console.log('Début de la fonction changeTag');
-    const tag = document.querySelector(`.${classTag}`);
+    const tag = document.querySelector(`${nameTag}.${classTag}`);
 
     if (tag) {
-
-        const initialContent = tag.innerHTML;
-
         const newTag = `<input type="text" class="${classTag}" value="${bodyTag}">`;
+
 
         tag.outerHTML = newTag;
 
@@ -42,20 +88,29 @@ function changeTag(url, NameTag, classTag, bodyTag) {
         updatedTag.focus();
 
 
-        updatedTag.addEventListener('keydown', function (event) {
+        updatedTag.addEventListener('keydown', async function (event) {
             if (event.key === 'Enter') {
 
                 const newValue = updatedTag.value
-                const response = updateAPI(url, newValue);
+                const response = await updateAPI(url, newValue);
 
                 console.log('Nouvelle valeur reçue de updateAPI :', newValue);
 
                 if (response !== 'error') {
-                    const tagChanged = `<${NameTag} class="${classTag}">${newValue}</${NameTag}>`;
-                    tag.outerHTML = tagChanged;
-                } else {
-                    const tagUnchanged = `<${NameTag} class="${classTag}">${initialContent}</${NameTag}>`;
-                    tag.outerHTML = tagUnchanged;
+                    const tagChanged = `<${nameTag} class="${classTag}" onclick="changeTag('${url}', '${ nameTag }', '${classTag}', '${newValue}')">${newValue}</${nameTag}>`;
+
+                    updatedTag.outerHTML = tagChanged;
+
+                    console.log(tagChanged);
+
+                    const backTag = document.querySelector(`.${classTag}`);
+
+                    console.log(backTag);
+
+                    backTag.focus();
+
+                }
+                else {
                     console.error(response);
                 }
             }
@@ -67,7 +122,8 @@ function changeTag(url, NameTag, classTag, bodyTag) {
 
 
 
-''
+
+
 function updateAPI(url, newValue) {
     const options = {
         method: 'PUT', // Ou 'PATCH' 
