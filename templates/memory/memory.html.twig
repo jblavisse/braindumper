@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Cave à idées !{% endblock %}
+{% block title %}Cave à idées !
+{% endblock %}
 
 {% block body %}
 	<h1>Bienvenue dans ta cave à idées !</h1>
@@ -8,19 +9,30 @@
 	<h2>Ajouter un Memory</h2>
 
 	{{form_start(memoryForm)}}
-    {{ form_row(memoryForm.title) }}
+	{{ form_row(memoryForm.title) }}
 	{{ form_row(memoryForm.description) }}
-	    <button type="submit">Créer un Memory</button>
+	<button type="submit">Créer un Memory</button>
 	{{form_end(memoryForm)}}
 
-	
+
 	<ul>
 		{% for donnee in donnees %}
-			<li>
-				<h3>{{ donnee.title }}</h3>
+			<li data-id="memory-{{donnee.id}}">
+				<h3 class="title-memory-{{donnee.id}}" 
+				onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'h3', 'title-memory-{{donnee.id}}', '{{donnee.title}}')">{{ donnee.title }}</h3>
 
-				<div>{{donnee.description}}</div>
+				<div class="description-memory-{{donnee.id}}" 
+				onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'div', 'description-memory-{{donnee.id}}', '{{donnee.description}}')">{{donnee.description}}</div>
+
+
+				<div class="delete-button-container">
+					<button type="button" onclick="deleteMemory('{{ path('memories_delete', { id: donnee.id }) }}', 'memory-{{ donnee.id }}')">Supprimer</button>
+				</div>
+
+				{# <button type="button" onclick="updateMemory('{{ path('memories_update', { id: donnee.id }) }}', 'titre-memory-{{ donnee.id }}', 'description-memory-{{ donnee.id }}')">Modifier</button> #}
 			</li>
+
+			<script src="{{ 'memory.js' }}"></script>
 		{% endfor %}
 	</ul>
 
