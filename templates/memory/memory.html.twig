@@ -3,37 +3,126 @@
 {% block title %}Cave à idées !
 {% endblock %}
 
+{% form_theme memoryForm 'tailwind_2_layout.html.twig' %}
+
 {% block body %}
-	<h1>Bienvenue dans ta cave à idées !</h1>
+	<div class="body">
 
-	<h2>Ajouter un Memory</h2>
+		<h1 class="text-3xl m-5 text-center">Vide-Cerveau<h1>
+				<div class="bg-gray-100 font-sans flex items-center justify-center">
+					<div x-data="{ openTab: 1 }" class="p-8 w-1/2">
+						<div class="w-full mx-auto">
+							<div class="mb-4 flex space-x-4 p-2 bg-white rounded-lg shadow-md">
+								<button x-on:click="openTab = 1" :class="{ 'bg-blue-600 text-white': openTab === 1 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300">A faire
+								</button>
+								<button x-on:click="openTab = 2" :class="{ 'bg-blue-600 text-white': openTab === 2 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300">Effectuées
+								</button>
+							</div>
 
-	{{form_start(memoryForm)}}
-	{{ form_row(memoryForm.title) }}
-	{{ form_row(memoryForm.description) }}
-	<button type="submit">Créer un Memory</button>
-	{{form_end(memoryForm)}}
+							<div x-show="openTab === 1" class="transition-all duration-300 bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600 ">
+
+								<div class="flex flex-col justify-center items-center ">
+									<div class="w-full !z-5 relative flex flex-col rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-4 3xl:p-![18px] bg-white undefined">
+
+										<div class="relative flex flex-row justify-between">
+											<div class="flex items-center">
+												<div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100">
+													<span class="material-symbols-rounded h-6 w-6 text-brand-500">
+														check_circle
+													</span>
+												</div>
+												<h4 class="ml-4 text-xl font-bold text-navy-700 text-blue-600">
+													Boîte de réception
+												</h4>
+											</div>
+										</div>
+
+										<div class="max-w-2xl w-full mx-auto py-9">
+
+											{# <form> #}
+											{# <label for="default-add" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Add</label> #}
+											<div class="relative mb-12 "> 
+												{{ form_start(memoryForm)}}
+												{{ form_row(memoryForm.title) }}
+												{{ form_row(memoryForm.description) }}
+												{# <input type="add" id="default-add" class="block p-4 pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Que devez-vous faire ?" required> #}
+
+												<button type="submit" class="text-white absolute w-1/5 right-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
+													<div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none p-3">
+														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+															<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+														</svg>
+													</div>
+													Créer
+												</button>
+												{{form_end(memoryForm)}}
+											</div>
+											{# </form> #}
+										</br>
+									</br>
 
 
-	<ul>
-		{% for donnee in donnees %}
-			<li data-id="memory-{{donnee.id}}">
-				<h3 class="title-memory-{{donnee.id}}" 
-				onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'h3', 'title-memory-{{donnee.id}}', '{{donnee.title}}')">{{ donnee.title }}</h3>
+									<div class="h-full w-full">
 
-				<div class="description-memory-{{donnee.id}}" 
-				onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'div', 'description-memory-{{donnee.id}}', '{{donnee.description}}')">{{donnee.description}}</div>
+										{% for donnee in donnees %}
+											<div class="mt-2 flex items-center justify-between p-2" data-id="memory-{{donnee.id}}">
+												<div class="flex items-center justify-center gap-2">
 
+													<input type="checkbox" class="defaultCheckbox relative flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] appearance-none items-center
+																													justify-center rounded-md border border-gray-300 text-white/0 outline-none transition duration-[0.2s]
+																													checked:border-none checked:text-white hover:cursor-pointer checked:bg-brand-500" name="weekly" checked/>
 
-				<div class="delete-button-container">
-					<button type="button" onclick="deleteMemory('{{ path('memories_delete', { id: donnee.id }) }}', 'memory-{{ donnee.id }}')">Supprimer</button>
+													<h3 class="text-base font-bold text-navy-700 title-memory-{{donnee.id}} " onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'h3', 'title-memory-{{donnee.id}}', '{{donnee.title}}')">{{ donnee.title }}</h3>
+													<div class="text-base text-navy-700 description-memory-{{donnee.id}}" onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'div', 'description-memory-{{donnee.id}}', '{{donnee.description}}')">{{donnee.description}}</div>
+													<div class="delete-button-container">
+														<button class="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2" type="button" onclick="deleteMemory('{{ path('memories_delete', { id: donnee.id }) }}', 'memory-{{ donnee.id }}')">Supprimer</button>
+													</div>
+
+												</div>
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div x-show="openTab === 2" class="transition-all duration-300 bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600"></div>
 				</div>
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 
-				{# <button type="button" onclick="updateMemory('{{ path('memories_update', { id: donnee.id }) }}', 'titre-memory-{{ donnee.id }}', 'description-memory-{{ donnee.id }}')">Modifier</button> #}
-			</li>
+		<script src="https://unpkg.com/flowbite@1.4.0/dist/flowbite.js"></script>
+		{# <script src="{{ asset('build/app.js') }}"></script> #}
+		{# <h1>Bienvenue dans ta cave à idées !</h1>
+		
+						<h2>Ajouter un Memory</h2>
+		
+						{# {{form_start(memoryForm)}}
+																		{{ form_row(memoryForm.title) }}
+																		{{ form_row(memoryForm.description) }}
+																		<button type="submit">Créer un Memory</button>
+																		{{form_end(memoryForm)}}
+		
+		
+						<ul>
+							{% for donnee in donnees %}
+								<li data-id="memory-{{donnee.id}}">
+									<h3 class="title-memory-{{donnee.id}}" onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'h3', 'title-memory-{{donnee.id}}', '{{donnee.title}}')">{{ donnee.title }}</h3>
+		
+									<div class="description-memory-{{donnee.id}}" onclick="changeTag('{{ path('memories_update', { id: donnee.id }) }}', 'div', 'description-memory-{{donnee.id}}', '{{donnee.description}}')">{{donnee.description}}</div>
+		
+		
+									<div class="delete-button-container">
+										<button type="button" onclick="deleteMemory('{{ path('memories_delete', { id: donnee.id }) }}', 'memory-{{ donnee.id }}')">Supprimer</button>
+									</div>
+		
+								</li>
+		
+		
+							{% endfor %}
+						</ul>
+		 #}
 
-			<script src="{{ 'memory.js' }}"></script>
-		{% endfor %}
-	</ul>
-
-{% endblock %}
+	{% endblock %}

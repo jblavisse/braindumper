@@ -1,3 +1,9 @@
+
+
+
+import './styles/app.scss';
+
+
 function deleteMemory(url, dataId) {
     if (confirm("Voulez-vous vraiment supprimer ce Memory ?")) {
 
@@ -21,55 +27,6 @@ function deleteMemory(url, dataId) {
     }
 }
 
-
-
-// function changeTag(url, nameTag, classTag, bodyTag) {
-
-//     console.log('Début de la fonction changeTag');
-//     const tag = document.querySelector(`${nameTag}.${classTag}`);
-
-//     console.log(tag)
-
-//     if (tag) {
-
-//         const initialContent = tag.innerHTML;
-
-//         const newTag = `<input type="text" class="${classTag}" value="${bodyTag}">`;
-
-//         console.log(newTag);
-//         tag.outerHTML = newTag;
-
-//         const updatedTag = document.querySelector(`.${classTag}`);
-
-//         console.log(updatedTag)
-
-//         updatedTag.focus();
-
-
-//         updatedTag.addEventListener('keydown', function (event) {
-//             if (event.key === 'Enter') {
-
-//                 const newValue = updatedTag.value
-//                 const response = updateAPI(url, newValue);
-
-//                 console.log('Nouvelle valeur reçue de updateAPI :', newValue);
-
-//                 if (response !== 'error') {
-//                     const tagChanged = `<${nameTag} class="${classTag}" onclick="changeTag(${url}, ${ nameTag }, ${classTag}, ${newValue})">${newValue}</${nameTag}>`;
-//                     console.log(tagChanged)
-//                     tag.outerHTML = tagChanged;
-//                 } else {
-//                     const tagUnchanged = `<${nameTag} class="${classTag}">${initialContent}</${nameTag}>`;
-//                     console.log(tagUnchanged)
-//                     tag.outerHTML = tagUnchanged;
-//                     console.error(response);
-//                 }
-//             }
-//         });
-//     } else {
-//         console.error('Aucun élément avec la classe spécifiée trouvé.');
-//     }
-// }
 
 function changeTag(url, nameTag, classTag, bodyTag) {
 
