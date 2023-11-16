@@ -1,3 +1,6 @@
+
+
+
 import './styles/app.scss';
 
 
@@ -13,8 +16,14 @@ function deleteMemory(url, dataId) {
             body: JSON.stringify({})
         }).then(response => {
             if (response.ok) {
-                const memory = document.querySelector('[data-id = "' + dataId + '"]');
-                memory.remove();
+                const memories = document.getElementsByClassName('memory-' + dataId);
+                if (memories.length > 0) {
+                    const memory = memories[0];
+                    console.log(memory);
+                    memory.remove();
+                } else {
+                    console.error('Aucun élément avec la classe memory-' + dataId + ' trouvé.');
+                }
             } else {
                 console.error('Erreur de suppression côté serveur:', response.statusText);
             }
@@ -24,8 +33,30 @@ function deleteMemory(url, dataId) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function () {
 
-function changeTag(url, nameTag, classTag, bodyTag) {
+    const deleteButtons = document.getElementsByClassName('delete-button');
+
+    
+    Array.from(deleteButtons).forEach(function (deleteButton) {
+        
+        const dataPath = deleteButton.getAttribute('data-path');
+        const dataId = deleteButton.getAttribute('data-id');
+
+        console.log('Data Path:', dataPath);
+        console.log('Data ID :', dataId);
+
+        deleteButton.addEventListener('click', function () {
+            deleteMemory(dataPath, dataId);
+            console.log('Bouton cliqué !');
+        });
+    });
+});
+
+
+
+
+function changeTag(url, nameTag, classTag, classTag2, bodyTag) {
 
     console.log('Début de la fonction changeTag');
     const tag = document.querySelector(`${nameTag}.${classTag}`);
@@ -51,7 +82,7 @@ function changeTag(url, nameTag, classTag, bodyTag) {
                 console.log('Nouvelle valeur reçue de updateAPI :', newValue);
 
                 if (response !== 'error') {
-                    const tagChanged = `<${nameTag} class="${classTag}" onclick="changeTag('${url}', '${ nameTag }', '${classTag}', '${newValue}')">${newValue}</${nameTag}>`;
+                    const tagChanged = `<${nameTag} class="${classTag2}">${newValue}</${nameTag}>`;
 
                     updatedTag.outerHTML = tagChanged;
 
@@ -105,4 +136,26 @@ function updateAPI(url, newValue) {
             return 'error'
         });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const updateDatas = document.getElementsByClassName('update-data');
+
+    
+    Array.from(updateDatas).forEach(function (updateData) {
+        
+        const dataTag = updateData.getAttribute('data-tag');
+        const dataClass = updateData.getAttribute('data-class');
+        const dataClass2 = updateData.getAttribute('data-classe');
+        const dataBody = updateData.getAttribute('data-body');
+        const dataPath2 = updateData.getAttribute('data-path');
+
+
+        updateData.addEventListener('click', function () {
+            changeTag(dataPath2, dataTag, dataClass, dataClass2, dataBody);
+            console.log('Bouton cliqué !');
+        });
+    });
+});
+
 

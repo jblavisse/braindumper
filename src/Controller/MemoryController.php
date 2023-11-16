@@ -11,12 +11,14 @@ use App\Form\AddMemoryType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
 
 class MemoryController extends AbstractController
 {
 
+  
     private $entityManager;
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -33,6 +35,7 @@ class MemoryController extends AbstractController
         $memory = new Memory();
         $memoryForm = $this->createForm(AddMemoryType::class, $memory);
         $memoryForm->handleRequest($request);
+
 
 
         if ($memoryForm->isSubmitted() && $memoryForm->isValid()) {

@@ -16,7 +16,9 @@
 
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
-			<script src="{{ asset('build/app.js') }}"></script>
+			<script src="{{ asset('build/app.js') }}">
+				console.log("Le fichier est bien téléchargé !");
+			</script>
 		{% endblock %}
 	</head>
 	<body>
