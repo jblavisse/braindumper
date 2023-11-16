@@ -8,17 +8,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\MemoryRepository;
 use App\Entity\Memory;
 use App\Form\AddMemoryType;
+use App\Form\AddMemoryDescriptionType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Asset\Package;
-use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
 
 class MemoryController extends AbstractController
 {
 
-  
+
     private $entityManager;
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -37,7 +36,6 @@ class MemoryController extends AbstractController
         $memoryForm->handleRequest($request);
 
 
-
         if ($memoryForm->isSubmitted() && $memoryForm->isValid()) {
             $memory = $memoryForm->getData();
 
@@ -48,8 +46,8 @@ class MemoryController extends AbstractController
 
         }
 
-        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'memoryForm' => $memoryForm->createView()]);
 
+        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'memoryForm' => $memoryForm->createView()]);
 
     }
 

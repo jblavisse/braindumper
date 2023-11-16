@@ -19,7 +19,7 @@ class Memory
 
     #[Assert\NotBlank(message: 'Le titre du Memory ne peut pas être vide')]
     #[Assert\Length(
-        min: 2,
+        min: 1,
         max: 150,
         minMessage: "Le titre doit faire au moins {{ limit }} caractères",
         maxMessage: "Le titre ne doit pas faire plus de {{ limit }} caractères"

@@ -1,6 +1,3 @@
-
-
-
 import './styles/app.scss';
 
 
@@ -36,15 +33,11 @@ function deleteMemory(url, dataId) {
 document.addEventListener('DOMContentLoaded', function () {
 
     const deleteButtons = document.getElementsByClassName('delete-button');
-
     
     Array.from(deleteButtons).forEach(function (deleteButton) {
         
         const dataPath = deleteButton.getAttribute('data-path');
         const dataId = deleteButton.getAttribute('data-id');
-
-        console.log('Data Path:', dataPath);
-        console.log('Data ID :', dataId);
 
         deleteButton.addEventListener('click', function () {
             deleteMemory(dataPath, dataId);
@@ -56,67 +49,90 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-function changeTag(url, nameTag, classTag, classTag2, bodyTag) {
-
+function changeTag(url, id, bodyTitle, bodyDescription) {
     console.log('Début de la fonction changeTag');
-    const tag = document.querySelector(`${nameTag}.${classTag}`);
+    const title = document.querySelector(".title-memory-" + id);
+    console.log('title:', title);
+    const description = document.querySelector(".description-memory-" + id);
+    console.log('description:', description);
 
-    if (tag) {
-        const newTag = `<input type="text" class="${classTag}" value="${bodyTag}">`;
+    const classTitle = "text-base font-bold text-navy-700 border border-blue-500 border-2 title-memory-" + id;
+    const classDescription = "text-base text-navy-700 border border-blue-500 border-2 description-memory-" + id;
+
+    if (title && description) {
+        const newInput = `<input type="text" class="${classTitle}" value="${bodyTitle}" placeholder="Titre">`;
+        const newTextArea = `<textarea class="${classDescription}" placeholder="Description">${bodyDescription}</textarea>`;
 
 
-        tag.outerHTML = newTag;
-
-        const updatedTag = document.querySelector(`.${classTag}`);
-
-
-        updatedTag.focus();
+        title.outerHTML = newInput;
+        description.outerHTML = newTextArea;
 
 
-        updatedTag.addEventListener('keydown', async function (event) {
+        const updatedTitle = document.querySelector(`.title-memory-` + id);
+        const updatedDescription = document.querySelector(`.description-memory-` + id);
+
+        updatedTitle.focus();
+        updatedDescription.select();
+
+
+
+        // updatedTitle.focus();
+        // updatedDescription.setSelectionRange(0, updatedDescription.value.length);
+
+        
+        const container = document.querySelector(".memory-container-" + id);
+
+        container.addEventListener('keydown', async function (event) {
             if (event.key === 'Enter') {
+                console.log("Entrée cliqué !")
 
-                const newValue = updatedTag.value
-                const response = await updateAPI(url, newValue);
+                const newTitle = updatedTitle.value
+                const newDescription = updatedDescription.value;
 
-                console.log('Nouvelle valeur reçue de updateAPI :', newValue);
+                const datas = [newTitle, newDescription];
+
+                // console.log("nouvelle description : " + { newDescription })
+                // updatedDescription.setAttribute("value", newTitle);
+                // updatedTitle.setAttribute("value", newDescription);
+
+                const response = await updateAPI(url, datas);
+
+
+                const allClassTitle = "text-base font-bold text-navy-700 title-memory-" + id + " update-data";
+                const allClassDescription = "text-base text-navy-700 description-memory-" + id + " update-data";
 
                 if (response !== 'error') {
-                    const tagChanged = `<${nameTag} class="${classTag2}">${newValue}</${nameTag}>`;
 
-                    updatedTag.outerHTML = tagChanged;
+                    const titleChanged = `<h3 class="${allClassTitle}">${newTitle}</h3>`;
+                    const descriptionChanged = `<div class="${allClassDescription}">${newDescription}</div>`;
 
-                    console.log(tagChanged);
-
-                    const backTag = document.querySelector(`.${classTag}`);
-
-                    console.log(backTag);
-
-                    backTag.focus();
+                    updatedTitle.outerHTML = titleChanged;
+                    updatedDescription.outerHTML = descriptionChanged;
 
                 }
                 else {
                     console.error(response);
                 }
             }
-        });
+        })
+         
     } else {
         console.error('Aucun élément avec la classe spécifiée trouvé.');
     }
 }
 
-
-
-
-
-function updateAPI(url, newValue) {
+function updateAPI(url, datas) {
     const options = {
-        method: 'PUT', // Ou 'PATCH' 
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache',
             'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify(newValue),
+        body: JSON.stringify({
+            title: datas[0],
+            description: datas[1],
+        }),
     };
 
     fetch(url, options)
@@ -126,11 +142,17 @@ function updateAPI(url, newValue) {
             }
             return response.json();
         })
-        .then(data => {
-            data = newValue;
-            console.log('Réponse de l\'API :', data);
-            return data;
+        .then(updatedData => {
+            console.table(updatedData);
+
+            // Mise à jour spécifique des éléments du tableau
+            updatedData.title= datas[0]
+            updatedData.description =datas[1]
+
+            console.table(updatedData);
+            return updatedData;
         })
+        
         .catch(error => {
             console.error('Erreur lors de la requête fetch :', error);
             return 'error'
@@ -139,22 +161,25 @@ function updateAPI(url, newValue) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const updateDatas = document.getElementsByClassName('update-data');
+    const containersClicks = document.getElementsByClassName('memory-container');
 
     
-    Array.from(updateDatas).forEach(function (updateData) {
+    Array.from(containersClicks).forEach(function (containersClick) {
         
-        const dataTag = updateData.getAttribute('data-tag');
-        const dataClass = updateData.getAttribute('data-class');
-        const dataClass2 = updateData.getAttribute('data-classe');
-        const dataBody = updateData.getAttribute('data-body');
-        const dataPath2 = updateData.getAttribute('data-path');
+        const dataBodyTitle = containersClick.getAttribute('data-body-title');
+        const dataBodyDescription = containersClick.getAttribute('data-body-description');
+        const dataPath2 = containersClick.getAttribute('data-path');
+        const dataId =containersClick.getAttribute('data-id')
 
-
-        updateData.addEventListener('click', function () {
-            changeTag(dataPath2, dataTag, dataClass, dataClass2, dataBody);
-            console.log('Bouton cliqué !');
-        });
+        const containerClick = document.getElementsByClassName('memory-container-' + dataId);
+        
+        Array.from(containerClick).forEach(function (containerIdClick) {
+            containerIdClick.addEventListener('click', function () {
+                changeTag(dataPath2, dataId, dataBodyTitle, dataBodyDescription);
+                
+                console.log('Bouton cliqué !');
+            });
+        })
     });
 });
 

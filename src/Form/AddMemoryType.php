@@ -33,7 +33,9 @@ class AddMemoryType extends AbstractType
                     'class' => 'w-full border p-2 rounded-md focus:outline-none focus:ring focus:border-blue-300',
                 ],
             ]);
-
+            
+        
+        
         // ->add('category', EntityType::class, [
         //     'class' => Category::class,
         //     'choice_label' => 'name',
