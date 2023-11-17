@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -34,6 +36,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Memory::class)]
+    private Collection $memories;
+
+    public function __construct()
+    {
+        $this->memories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -125,6 +135,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Memory>
+     */
+    public function getMemories(): Collection
+    {
+        return $this->memories;
+    }
+
+    public function addMemory(Memory $memory): static
+    {
+        if (!$this->memories->contains($memory)) {
+            $this->memories->add($memory);
+            $memory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemory(Memory $memory): static
+    {
+        if ($this->memories->removeElement($memory)) {
+            // set the owning side to null (unless already changed)
+            if ($memory->getUser() === $this) {
+                $memory->setUser(null);
+            }
+        }
 
         return $this;
     }

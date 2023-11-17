@@ -8,10 +8,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\MemoryRepository;
 use App\Entity\Memory;
 use App\Form\AddMemoryType;
-use App\Form\AddMemoryDescriptionType;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 class MemoryController extends AbstractController
@@ -26,10 +27,12 @@ class MemoryController extends AbstractController
 
 
     #[Route('/', name: 'app_memory')]
-    public function show(MemoryRepository $memoryRepository, Request $request): Response
+    #[IsGranted('ROLE_USER', message:"Vous devez être connecté(e) !")]
+    public function show(MemoryRepository $memoryRepository, UserRepository $userRepository, Request $request): Response
     {
         $memories = $memoryRepository
             ->findAll();
+        $user = $this->getUser();
 
         $memory = new Memory();
         $memoryForm = $this->createForm(AddMemoryType::class, $memory);
@@ -38,7 +41,8 @@ class MemoryController extends AbstractController
 
         if ($memoryForm->isSubmitted() && $memoryForm->isValid()) {
             $memory = $memoryForm->getData();
-
+            $user = $this->getUser();
+            $memory->setUser($user);
             $this->entityManager->persist($memory);
             $this->entityManager->flush();
 
@@ -47,7 +51,7 @@ class MemoryController extends AbstractController
         }
 
 
-        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'memoryForm' => $memoryForm->createView()]);
+        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'user' => $user, 'memoryForm' => $memoryForm->createView()]);
 
     }
 

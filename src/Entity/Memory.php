@@ -29,6 +29,9 @@ class Memory
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\ManyToOne(targetEntity:"App\Entity\User", inversedBy: 'memories')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,6 +57,18 @@ class Memory
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

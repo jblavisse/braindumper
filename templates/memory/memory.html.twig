@@ -24,8 +24,7 @@
 							<div class="w-full !z-5 relative flex flex-col rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-4 3xl:p-![18px] bg-white undefined">
 								<div class="relative flex flex-row justify-between">
 									<div class="flex items-center">
-										<div class="flex h-9 w-9 items-center justify-center rounded-full bg-pink-200">
-										</div>
+										<div class="flex h-9 w-9 items-center justify-center rounded-full bg-pink-200"></div>
 										<h4 class="ml-4 text-xl font-bold text-navy-700 text-pink-400">
 											Boîte de réception
 										</h4>
@@ -53,16 +52,21 @@
 
 							<div class="h-full w-full">
 
+
 								{% for donnee in donnees %}
-									<div class="mt-2 flex items-center justify-between p-2 memory-{{donnee.id}}">
-										<div class="memory-container memory-container-{{donnee.id}} flex items-center justify-center gap-2" data-id="{{donnee.id}}" data-url="{{path('memories_update', { id: donnee.id }) }}">
-											<h3 class="memory-title text-base font-bold text-navy-700 title-memory-{{donnee.id}}">{{donnee.title}}</h3>
-											<div class="memory-description text-base text-navy-700 description-memory-{{donnee.id}}">{{donnee.description}}</div>
-											<div class="delete-button-container">
-												<button class="delete-button text-white absolute right-2.5 bg-red-400 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-1 " type="button" data-id="{{donnee.id}}" data-path="{{path('memories_delete', { id: donnee.id }) }}">X</button>
+									{% if user is defined and user.id is defined %}
+										{% if donnee.user.id == user.id %}
+											<div class="mt-2 flex items-center justify-between p-2 memory-{{donnee.id}}">
+												<div class="memory-container memory-container-{{donnee.id}} flex items-center justify-center gap-2" data-id="{{donnee.id}}" data-url="{{path('memories_update', { id: donnee.id }) }}">
+													<h3 class="memory-title text-base font-bold text-navy-700 title-memory-{{donnee.id}}">{{donnee.title}}</h3>
+													<div class="memory-description text-base text-navy-700 description-memory-{{donnee.id}}">{{donnee.description}}</div>
+													<div class="delete-button-container">
+														<button class="delete-button text-white absolute right-2.5 bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1 " type="button" data-id="{{donnee.id}}" data-path="{{path('memories_delete', { id: donnee.id }) }}">X</button>
+													</div>
+												</div>
 											</div>
-										</div>
-									</div>
+										{% endif %}
+									{% endif %}
 								{% endfor %}
 							</div>
 						</div>

@@ -66,14 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = container.querySelector('.memory-title').textContent;
     const description = container.querySelector('.memory-description').textContent;
     
-    const classTitle = "edit-title text-base font-bold text-navy-700 border border-blue-500 border-2 ";
-    const classDescription = "edit-description text-base text-navy-700 border border-blue-500 border-2 ";
-    const classButton = "save-button text-white absolute w-1/5 right-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2";
+    const classTitle = "edit-title text-base font-bold text-navy-700 border border-pink-400 py-1 px-1";
+    const classDescription = "edit-description text-base text-navy-700 border border-pink-400 p-3";
+    const classButton = "save-button text-white absolute w-1/7 right-6 bg-pink-400 hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-4 py-2";
       
     container.innerHTML = `
-      <input type="text" class="${classTitle}" value="${title}">
-      <textarea class="${classDescription}">${description}</textarea>
-      <button class="${classButton}">Save</button>`;
+        <input type="text" class="${classTitle}" value="${title}">
+        <textarea class="${classDescription}">${description}</textarea>
+        <button class="${classButton}">Save</button>`;
   }
   
   async function saveChanges(container, url, dataId) {
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!response.ok) throw new Error('Failed to update');
         const classTitle = "memory-title text-base font-bold text-navy-700 ";
         const classDescription = "memory-description text-base text-navy-700 ";
-        const classButton = "delete-button text-white absolute right-2.5 bg-red-400 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-1"
+        const classButton = "delete-button text-white absolute right-2.5 bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1"
         const dataPath = "/memories/" + dataId;   
         
         container.innerHTML = `
