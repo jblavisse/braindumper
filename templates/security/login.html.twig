@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter !
+{% endblock %}
+
+{% block body %}
+	<form method="post">
+		{% if error %}
+			<!-- component -->
+			<div class=" alert alert-danger font-regular relative mb-4 block w-full rounded-lg bg-gradient-to-tr from-pink-600 to-yellow-300 p-4 text-base leading-5 text-white opacity-100">
+				<i class="fas fa-exclamation mr-2"></i>
+				{{ error.messageKey|trans(error.messageData, 'security') }}
+			</div>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous"/>
+			<link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"/>
+			<script src="https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js"></script>
+		{% endif %}
+
+		{% if app.user %}
+			<div class=" alert alert-danger font-regular relative mb-4 block w-full rounded-lg bg-gradient-to-tr from-pink-600 to-yellow-300 p-4 text-base leading-5 text-white opacity-100">
+				<i class="fas fa-exclamation mr-2"></i>
+				Vous êtes identifié à
+				{{ app.user.userIdentifier }},
+				<button class="py-3 w-64 text-xl text-white bg-pink-400 rounded-2xl">
+					<a href="{{ path('app_logout') }}">Se connecter</a>
+				</button>
+			</div>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous"/>
+			<link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"/>
+			<script src="https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js"></script>
+		{% endif %}
+		<div class="min-h-screen bg-pink-400 flex justify-center items-center">
+			<div class="absolute w-60 h-60 rounded-xl bg-yellow-300 -top-5 -left-16 z-0 transform rotate-45 hidden md:block"></div>
+			<div class="absolute w-48 h-48 rounded-xl bg-yellow-300 -bottom-6 -right-10 transform rotate-12 hidden md:block"></div>
+			<div class="py-12 px-12 bg-white rounded-2xl shadow-xl z-20">
+				<div>
+					<h1 class="text-3xl font-bold text-center mb-4 cursor-pointer">Connectez-vous !</h1>
+				</div>
+				<div class="space-y-4">
+					<input type="email" value="{{ last_username }}" placeholder="Votre email" class="block text-sm py-3 px-4 rounded-lg w-full border outline-none" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus/>
+					<input type="password" placeholder="Votre mot de passe" class="block text-sm py-3 px-4 rounded-lg w-full border outline-none" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required/>
+
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				</div>
+				<div class="text-center mt-6">
+					<button class="py-3 w-64 text-xl text-white bg-pink-400 rounded-2xl">Se connecter</button>
+					<p class="mt-4 text-sm">Vous n'avez pas encore de compte ?
+						<span class="underline cursor-pointer">
+							S'inscrire</span>
+					</p>
+				</div>
+			</div>
+			<div class="w-40 h-40 absolute bg-yellow-300 rounded-full top-0 right-12 hidden md:block"></div>
+			<div class="w-20 h-40 absolute bg-yellow-300 rounded-full bottom-20 left-10 transform rotate-45 hidden md:block"></div>
+		</div>
+	</form>
+{% endblock %}
