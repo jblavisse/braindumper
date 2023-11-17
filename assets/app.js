@@ -1,6 +1,5 @@
 import './styles/app.scss';
 
-
 function deleteMemory(url, dataId) {
     if (confirm("Voulez-vous vraiment supprimer ce Memory ?")) {
 
@@ -47,194 +46,68 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
-
-function changeTag(url, id, bodyTitle, bodyDescription) {
-    console.log('Début de la fonction changeTag');
-    const title = document.querySelector(".title-memory-" + id);
-    const description = document.querySelector(".description-memory-" + id);
-
-    const classTitle = "text-base font-bold text-navy-700 border border-blue-500 border-2 title-memory-" + id;
-    const classDescription = "text-base text-navy-700 border border-blue-500 border-2 description-memory-" + id;
-
-    const allClassTitle = "text-base font-bold text-navy-700 title-memory-" + id + " update-data";
-    const allClassDescription = "text-base text-navy-700 description-memory-" + id + " update-data";
-
-    let isEditingTitle = true;
-    let isEditingDescription = true;
-
-    if (title && description) {
-        const newInput = `<input type="text" class="${classTitle}" value="${bodyTitle}" placeholder="Titre">`;
-        console.log(newInput);
-        const newTextArea = `<textarea class="${classDescription}" placeholder="Description">${bodyDescription}</textarea>`;
-
-        title.outerHTML = newInput;
-        console.log(title);
-        description.outerHTML = newTextArea;
-
-        const updatedTitle = document.querySelector(`.title-memory-` + id);
-        console.log(updatedTitle)
-        const updatedDescription = document.querySelector(`.description-memory-` + id);
-
-        // updatedTitle.focus();
-        // updatedTitle.addEventListener('blur', function () {
-        //     if (isEditingTitle) {
-        //         console.log(isEditingTitle);
-        //         const newTitle = updatedTitle.value;
-        //         updatedTitle.outerHTML = `<h3 class="${allClassTitle}">${newTitle}</h3>`;
-        //     }
-        //     isEditingTitle = true;
-        // });
-
-        // updatedDescription.focus();
-
-        // updatedDescription.addEventListener('blur', function () {
-        //     if (isEditingDescription) {
-        //         const newDescription = updatedDescription.value;
-        //         updatedDescription.outerHTML = `<div class="${allClassDescription}">${newDescription}</div>`;
-        //     }
-        //     isEditingDescription = true;
-        // });
-        let isEditingTitle = true;
-        let isEditingDescription = true;
-
-        const handleBlurTitle = () => {
-            if (isEditingTitle) {
-                const newTitle = updatedTitle.value;
-                const newElement = document.createElement('h3');
-                newElement.className = allClassTitle;
-                newElement.textContent = newTitle;
-        
-                updatedTitle.replaceWith(newElement);
-            }
-            isEditingTitle = true;
-            updatedTitle.removeEventListener('mousedown', handleBlurTitle);
-        };
-
-        const handleBlurDescription = () => {
-            if (isEditingDescription) {
-                const newDescription = updatedDescription.value;
-                const newElement = document.createElement('div')
-                newElement.className = allClassDescription;
-                newElement.textContent = newDescription;
-        
-                updatedDescription.replaceWith(newElement);
-            }
-            isEditingDescription = true;
-            updatedDescription.removeEventListener('mousedown', handleBlurDescription);
-        };
-
-        document.addEventListener('mousedown', function handleMouseDown(event) {
-            const target = event.target;
-            if (target !== updatedTitle && target !== updatedDescription) {
-                handleBlurTitle();
-                handleBlurDescription();
-            }
-        });
-
-        updatedTitle.focus();
-        document.addEventListener('mousedown', handleBlurTitle);
-
-        updatedDescription.focus();
-        document.addEventListener('mousedown', handleBlurDescription);
-
-
-
-        
-        const container = document.querySelector(".memory-container-" + id);
-
-        container.addEventListener('keydown', async function (event) {
-            if (event.key === 'Enter') {
-                console.log("Entrée cliqué !")
-
-                const newTitle = updatedTitle.value
-                const newDescription = updatedDescription.value;
-
-                const datas = [newTitle, newDescription];
-
-                const response = await updateAPI(url, datas);
-
-                if (response !== 'error') {
-
-                    const titleChanged = `<h3 class="${allClassTitle}">${newTitle}</h3>`;
-                    const descriptionChanged = `<div class="${allClassDescription}">${newDescription}</div>`;
-
-                    updatedTitle.outerHTML = titleChanged;
-                    updatedDescription.outerHTML = descriptionChanged;
-
-                }
-                else {
-                    console.error(response);
-                }
-                isEditingTitle = true;
-                isEditingDescription = true;
-            }
-        })
-         
-    } else {
-        console.error('Aucun élément avec la classe spécifiée trouvé.');
-    }
-}
-
-function updateAPI(url, datas) {
-    const options = {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({
-            title: datas[0],
-            description: datas[1],
-        }),
-    };
-
-    fetch(url, options)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('La requête a échoué avec le statut : ' + response.status);
-            }
-            return response.json();
-        })
-        .then(updatedData => {
-            console.table(updatedData);
-
-            updatedData.title= datas[0]
-            updatedData.description =datas[1]
-
-            console.table(updatedData);
-            return updatedData;
-        })
-        
-        .catch(error => {
-            console.error('Erreur lors de la requête fetch :' + error);
-            return 'error'
-        });
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    const containersClicks = document.getElementsByClassName('memory-container');
-
-    
-    Array.from(containersClicks).forEach(function (containersClick) {
-        
-        const dataBodyTitle = containersClick.getAttribute('data-body-title');
-        const dataBodyDescription = containersClick.getAttribute('data-body-description');
-        const dataPath2 = containersClick.getAttribute('data-path');
-        const dataId =containersClick.getAttribute('data-id')
-
-        const containerClick = document.getElementsByClassName('memory-container-' + dataId);
-        
-        Array.from(containerClick).forEach(function (containerIdClick) {
-            containerIdClick.addEventListener('click', function () {
-                changeTag(dataPath2, dataId, dataBodyTitle, dataBodyDescription);
-                
-                console.log('Bouton cliqué !');
-            });
-        })
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', event => {
+      const memoryContainer = event.target.closest('.memory-container');
+      if (!memoryContainer) return;
+  
+        const url = memoryContainer.dataset.url;
+        const dataId = memoryContainer.dataset.id;
+      
+      if (event.target.matches('.memory-title, .memory-description')) {
+        transformToEditable(memoryContainer);
+      } else if (event.target.matches('.save-button')) {
+        saveChanges(memoryContainer, url, dataId);
+      }
     });
-});
+  });
+  
+  function transformToEditable(container) {
+    const title = container.querySelector('.memory-title').textContent;
+    const description = container.querySelector('.memory-description').textContent;
+    
+    const classTitle = "edit-title text-base font-bold text-navy-700 border border-blue-500 border-2 ";
+    const classDescription = "edit-description text-base text-navy-700 border border-blue-500 border-2 ";
+    const classButton = "save-button text-white absolute w-1/5 right-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2";
+      
+    container.innerHTML = `
+      <input type="text" class="${classTitle}" value="${title}">
+      <textarea class="${classDescription}">${description}</textarea>
+      <button class="${classButton}">Save</button>`;
+  }
+  
+  async function saveChanges(container, url, dataId) {
+    const updatedTitle = container.querySelector('.edit-title').value;
+    const updatedDescription = container.querySelector('.edit-description').value;
+  
 
-
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: updatedTitle, description: updatedDescription })
+        });
+        if (!response.ok) throw new Error('Failed to update');
+        const classTitle = "memory-title text-base font-bold text-navy-700 ";
+        const classDescription = "memory-description text-base text-navy-700 ";
+        const classButton = "delete-button text-white absolute right-2.5 bg-red-400 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-1"
+        const dataPath = "/memories/" + dataId;   
+        
+        container.innerHTML = `
+            <h3 class="${classTitle}">${updatedTitle}</h3>
+            <div class="${classDescription}">${updatedDescription}</div>
+            <div class="delete-button-container">
+			    <button class="${classButton}" type="button" data-id=${dataId} data-path="${dataPath}">X</button>
+		    </div>`;
+        const deleteButton = container.querySelector('.delete-button');
+        deleteButton.addEventListener('click', () => {
+            deleteMemory(dataPath, dataId);
+            console.log('Bouton cliqué !');
+        });
+    
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+  }

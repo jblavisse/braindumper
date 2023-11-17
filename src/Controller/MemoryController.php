@@ -73,28 +73,38 @@ class MemoryController extends AbstractController
         $memory = $entityManager->getRepository(Memory::class)->find($id);
         $newTitle = $request->request->get('title');
 
-        
+
         if (!$memory) {
             return $this->json('No project found for id' . $id, 404);
         }
 
+        $requestData = json_decode($request->getContent(), true);
+
+        $newTitle = $requestData['title'] ?? null;
+        $newDescription = $requestData['description'] ?? null;
+        
         if ($newTitle !== null) {
-            $newDescription = $request -> request->get('description');
-            var_dump($request->request->all());
-            dump('Nouveau Titre : '. $newTitle);
-            dump('Nouvelle description : '. $newDescription);
             $memory->setTitle($newTitle);
-            $memory->setDescription($newDescription);
-            $entityManager->flush();
         }
+
+        if ($newDescription !== null) {
+            $memory->setDescription($newDescription);
+        }
+
+        $this->entityManager->persist($memory);
+        $entityManager->flush();
 
 
         $data = [
-            'id' => $memory->getId(),
-            'title' => $memory->getTitle(),
-            'description' => $memory->getDescription(),
+            [
+                'id' => $memory->getId(),
+                'title' => $memory->getTitle(),
+                'description' => $memory->getDescription(),
+                'newTitle' => $newTitle,
+                'newDescription' => $newDescription,
+                'request' => $request
+            ]
         ];
-
         return $this->json($data);
     }
 }
