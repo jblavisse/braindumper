@@ -6,31 +6,27 @@
 {% form_theme memoryForm 'tailwind_2_layout.html.twig' %}
 
 {% block body %}
-	<div class="bg-gray-100 w-full body">
-
-		<h1 class="text-3xl p-5 m-5 text-center">Vide-Cerveau</h1>
-		<div class="bg-gray-100 font-sans flex items-center justify-center">
+	{{parent ()}}
+	<div class="bg-pink-100 w-full body">
+		<div class="bg-pink-100 font-sans flex items-center justify-center">
 			<div x-data="{ openTab: 1 }" class="p-8 w-1/2">
 				<div class="w-full mx-auto">
 					<div class="mb-4 flex space-x-4 p-2 bg-white rounded-lg shadow-md">
-						<button x-on:click="openTab = 1" :class="{ 'bg-blue-600 text-white': openTab === 1 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300">A faire
+						<button x-on:click="openTab = 1" :class="{ 'bg-pink-400 text-white': openTab === 1 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-pink transition-all duration-300">A faire
 						</button>
-						<button x-on:click="openTab = 2" :class="{ 'bg-blue-600 text-white': openTab === 2 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300">Effectuées
+						<button x-on:click="openTab = 2" :class="{ 'bg-pink-400 text-white': openTab === 2 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-pink transition-all duration-300">Effectuées
 						</button>
 					</div>
 
-					<div x-show="openTab === 1" class="transition-all duration-300 bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600 ">
+					<div x-show="openTab === 1" class="transition-all duration-300 bg-white p-4 rounded-lg shadow-md border-l-4 border-pink-400 ">
 
 						<div class="flex flex-col justify-center items-center ">
 							<div class="w-full !z-5 relative flex flex-col rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-4 3xl:p-![18px] bg-white undefined">
 								<div class="relative flex flex-row justify-between">
 									<div class="flex items-center">
-										<div class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100">
-											<span class="material-symbols-rounded h-6 w-6 text-brand-500">
-												check_circle
-											</span>
+										<div class="flex h-9 w-9 items-center justify-center rounded-full bg-pink-200">
 										</div>
-										<h4 class="ml-4 text-xl font-bold text-navy-700 text-blue-600">
+										<h4 class="ml-4 text-xl font-bold text-navy-700 text-pink-400">
 											Boîte de réception
 										</h4>
 									</div>
@@ -41,7 +37,7 @@
 										{{ form_start(memoryForm)}}
 										{{ form_row(memoryForm.title) }}
 										{{ form_row(memoryForm.description) }}
-										<button type="submit" class="text-white absolute w-1/5 right-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
+										<button type="submit" class="text-white absolute w-1/5 right-2.5 bg-pink-400 hover:bg-pink-600 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-4 py-2">
 											<div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none p-3">
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 													<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
@@ -74,7 +70,7 @@
 				</div>
 			</div>
 
-			<div x-show="openTab === 2" class="transition-all duration-300 bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-600"></div>
+			<div x-show="openTab === 2" class="transition-all duration-300 bg-white p-4 rounded-lg shadow-md border-l-4 border-pink-400"></div>
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 		<script src="https://unpkg.com/flowbite@1.4.0/dist/flowbite.js"></script>

@@ -7,7 +7,7 @@
 	<form method="post">
 		{% if error %}
 			<!-- component -->
-			<div class=" alert alert-danger font-regular relative mb-4 block w-full rounded-lg bg-gradient-to-tr from-pink-600 to-yellow-300 p-4 text-base leading-5 text-white opacity-100">
+			<div class="alert alert-danger relative block w-full rounded-lg bg-white p-4 text-black">
 				<i class="fas fa-exclamation mr-2"></i>
 				{{ error.messageKey|trans(error.messageData, 'security') }}
 			</div>
@@ -17,11 +17,11 @@
 		{% endif %}
 
 		{% if app.user %}
-			<div class=" alert alert-danger font-regular relative mb-4 block w-full rounded-lg bg-gradient-to-tr from-pink-600 to-yellow-300 p-4 text-base leading-5 text-white opacity-100">
+			<div class="alert alert-danger relative block w-full rounded-lg bg-white p-4 text-black">
 				<i class="fas fa-exclamation mr-2"></i>
 				Vous êtes identifié à
-				{{ app.user.userIdentifier }},
-				<button class="py-3 w-64 text-xl text-white bg-pink-400 rounded-2xl">
+				{{ app.user.userIdentifier }}
+				<button class="py-3 w-32 mx-10 text-base text-white bg-pink-400 rounded-2xl">
 					<a href="{{ path('app_logout') }}">Se connecter</a>
 				</button>
 			</div>
