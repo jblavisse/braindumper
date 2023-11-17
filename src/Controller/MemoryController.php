@@ -67,19 +67,24 @@ class MemoryController extends AbstractController
     }
 
 
-    #[Route('/memories/{id}', name: 'memories_update', methods: ['put', 'patch'])]
+    #[Route('/memories/{id}', name: 'memories_update', methods: ['put'])]
     public function update(EntityManagerInterface $entityManager, Request $request, int $id): JsonResponse
     {
         $memory = $entityManager->getRepository(Memory::class)->find($id);
         $newTitle = $request->request->get('title');
 
+        
         if (!$memory) {
             return $this->json('No project found for id' . $id, 404);
         }
 
         if ($newTitle !== null) {
+            $newDescription = $request -> request->get('description');
+            var_dump($request->request->all());
+            dump('Nouveau Titre : '. $newTitle);
+            dump('Nouvelle description : '. $newDescription);
             $memory->setTitle($newTitle);
-            $memory->setDescription($request->request->get('description'));
+            $memory->setDescription($newDescription);
             $entityManager->flush();
         }
 

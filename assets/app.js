@@ -52,32 +52,93 @@ document.addEventListener('DOMContentLoaded', function () {
 function changeTag(url, id, bodyTitle, bodyDescription) {
     console.log('Début de la fonction changeTag');
     const title = document.querySelector(".title-memory-" + id);
-    console.log('title:', title);
     const description = document.querySelector(".description-memory-" + id);
-    console.log('description:', description);
 
     const classTitle = "text-base font-bold text-navy-700 border border-blue-500 border-2 title-memory-" + id;
     const classDescription = "text-base text-navy-700 border border-blue-500 border-2 description-memory-" + id;
 
+    const allClassTitle = "text-base font-bold text-navy-700 title-memory-" + id + " update-data";
+    const allClassDescription = "text-base text-navy-700 description-memory-" + id + " update-data";
+
+    let isEditingTitle = true;
+    let isEditingDescription = true;
+
     if (title && description) {
         const newInput = `<input type="text" class="${classTitle}" value="${bodyTitle}" placeholder="Titre">`;
+        console.log(newInput);
         const newTextArea = `<textarea class="${classDescription}" placeholder="Description">${bodyDescription}</textarea>`;
 
-
         title.outerHTML = newInput;
+        console.log(title);
         description.outerHTML = newTextArea;
 
-
         const updatedTitle = document.querySelector(`.title-memory-` + id);
+        console.log(updatedTitle)
         const updatedDescription = document.querySelector(`.description-memory-` + id);
 
-        updatedTitle.focus();
-        updatedDescription.select();
-
-
-
         // updatedTitle.focus();
-        // updatedDescription.setSelectionRange(0, updatedDescription.value.length);
+        // updatedTitle.addEventListener('blur', function () {
+        //     if (isEditingTitle) {
+        //         console.log(isEditingTitle);
+        //         const newTitle = updatedTitle.value;
+        //         updatedTitle.outerHTML = `<h3 class="${allClassTitle}">${newTitle}</h3>`;
+        //     }
+        //     isEditingTitle = true;
+        // });
+
+        // updatedDescription.focus();
+
+        // updatedDescription.addEventListener('blur', function () {
+        //     if (isEditingDescription) {
+        //         const newDescription = updatedDescription.value;
+        //         updatedDescription.outerHTML = `<div class="${allClassDescription}">${newDescription}</div>`;
+        //     }
+        //     isEditingDescription = true;
+        // });
+        let isEditingTitle = true;
+        let isEditingDescription = true;
+
+        const handleBlurTitle = () => {
+            if (isEditingTitle) {
+                const newTitle = updatedTitle.value;
+                const newElement = document.createElement('h3');
+                newElement.className = allClassTitle;
+                newElement.textContent = newTitle;
+        
+                updatedTitle.replaceWith(newElement);
+            }
+            isEditingTitle = true;
+            updatedTitle.removeEventListener('mousedown', handleBlurTitle);
+        };
+
+        const handleBlurDescription = () => {
+            if (isEditingDescription) {
+                const newDescription = updatedDescription.value;
+                const newElement = document.createElement('div')
+                newElement.className = allClassDescription;
+                newElement.textContent = newDescription;
+        
+                updatedDescription.replaceWith(newElement);
+            }
+            isEditingDescription = true;
+            updatedDescription.removeEventListener('mousedown', handleBlurDescription);
+        };
+
+        document.addEventListener('mousedown', function handleMouseDown(event) {
+            const target = event.target;
+            if (target !== updatedTitle && target !== updatedDescription) {
+                handleBlurTitle();
+                handleBlurDescription();
+            }
+        });
+
+        updatedTitle.focus();
+        document.addEventListener('mousedown', handleBlurTitle);
+
+        updatedDescription.focus();
+        document.addEventListener('mousedown', handleBlurDescription);
+
+
 
         
         const container = document.querySelector(".memory-container-" + id);
@@ -91,15 +152,7 @@ function changeTag(url, id, bodyTitle, bodyDescription) {
 
                 const datas = [newTitle, newDescription];
 
-                // console.log("nouvelle description : " + { newDescription })
-                // updatedDescription.setAttribute("value", newTitle);
-                // updatedTitle.setAttribute("value", newDescription);
-
                 const response = await updateAPI(url, datas);
-
-
-                const allClassTitle = "text-base font-bold text-navy-700 title-memory-" + id + " update-data";
-                const allClassDescription = "text-base text-navy-700 description-memory-" + id + " update-data";
 
                 if (response !== 'error') {
 
@@ -113,6 +166,8 @@ function changeTag(url, id, bodyTitle, bodyDescription) {
                 else {
                     console.error(response);
                 }
+                isEditingTitle = true;
+                isEditingDescription = true;
             }
         })
          
@@ -145,7 +200,6 @@ function updateAPI(url, datas) {
         .then(updatedData => {
             console.table(updatedData);
 
-            // Mise à jour spécifique des éléments du tableau
             updatedData.title= datas[0]
             updatedData.description =datas[1]
 
@@ -154,7 +208,7 @@ function updateAPI(url, datas) {
         })
         
         .catch(error => {
-            console.error('Erreur lors de la requête fetch :', error);
+            console.error('Erreur lors de la requête fetch :' + error);
             return 'error'
         });
 }

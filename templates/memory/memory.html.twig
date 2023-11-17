@@ -67,10 +67,6 @@
 											<div class="mt-2 flex items-center justify-between p-2 memory-{{donnee.id}}">
 												<div class="memory-container-{{donnee.id}} memory-container flex items-center justify-center gap-2" data-body-title="{{donnee.title}}" data-id="{{donnee.id}}" data-body-description="{{donnee.description}}" data-path="{{path('memories_update', { id: donnee.id }) }}" >
 
-													<input type="checkbox" class="defaultCheckbox relative flex h-[20px] min-h-[20px] w-[20px] min-w-[20px] appearance-none items-center
-													justify-center rounded-md border border-gray-300 text-white/0 outline-none transition duration-[0.2s]
-													checked:border-none checked:text-white hover:cursor-pointer checked:bg-brand-500" name="weekly" checked/>
-
 													<h3 class="text-base font-bold text-navy-700 title-memory-{{donnee.id}} update-data">{{ donnee.title }}</h3>
 													<div class="text-base text-navy-700 description-memory-{{donnee.id}} update-data" >{{donnee.description}}</div>
 													<div class="delete-button-container">
