@@ -40,6 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Memory::class)]
     private Collection $memories;
 
+    
+    #[ORM\Column(type:"string", length: 255, nullable:true)]
+    private $resetToken;
+
     public function __construct()
     {
         $this->memories = new ArrayCollection();
@@ -160,7 +164,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeMemory(Memory $memory): static
     {
         if ($this->memories->removeElement($memory)) {
-            // set the owning side to null (unless already changed)
             if ($memory->getUser() === $this) {
                 $memory->setUser(null);
             }
