@@ -40,8 +40,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Memory::class)]
     private Collection $memories;
 
-    
-    #[ORM\Column(type:"string", length: 255, nullable:true)]
+
+    #[ORM\Column(type: "string", length: 100)]
     private $resetToken;
 
     public function __construct()
@@ -131,7 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
+    public function getIsVerified(): bool
     {
         return $this->isVerified;
     }
@@ -169,6 +169,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
 
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
         return $this;
     }
 }

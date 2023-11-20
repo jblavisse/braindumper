@@ -95,7 +95,7 @@ class MemoryController extends AbstractController
             $memory->setDescription($newDescription);
         }
 
-        $this->entityManager->persist($memory);
+        $entityManager->persist($memory);
         $entityManager->flush();
 
 

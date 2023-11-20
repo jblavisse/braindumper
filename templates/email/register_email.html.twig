@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription 
+{% endblock %}
+
+{% block body %}
+	<!-- component -->
+	<section class="max-w-2xl px-6 py-8 mx-auto bg-white">
+
+		<main class="mt-8">
+			<h2 class="text-gray-700">Bonjour {{user.firstname}},
+			</h2>
+
+			<p class="mt-2 leading-loose text-gray-600 dark:text-gray-300">
+				Nous sommes heureux de voir parmi nous !
+								Il ne vous reste plus qu'à confirmer votre adresse mail !
+								Pour cela, suivez le lien ci-dessous !
+				<button class="px-6 py-2 mt-8 text-sm font-medium tracking-wider text-black capitalize transition-colors duration-300 transform bg-pink-600 rounded-lg hover:bg-pink-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+					<a href="{{ absolute_url(path('verify_user', {token: token})) }}">Lien</a>
+				</button>
+			</p>
+
+			<p class="mt-2 text-gray-600">
+				Merci beaucoup,
+				<br>
+				Vide Cerveau team
+			</p>
+
+
+		</main>
+
+
+		<footer class="mt-8">
+			<p class="text-gray-500 dark:text-gray-400">
+				Cet email est envoyé depuis l'adresse mail
+				<a href="#" class="text-blue-600 hover:underline dark:text-blue-400" target="_blank">noreply@exemple.com</a>. 
+																				            Si vous ne voulez plus recevoir d'email, vous pouvez vous
+				<a href="#" class="text-blue-600 hover:underline dark:text-blue-400">unsubscribe</a>
+				ou
+				<a href="#" class="text-blue-600 hover:underline dark:text-blue-400">gérer vos préférénces d'email</a>.
+			</p>
+		</footer>
+	</section>
+{% endblock %}
