@@ -1,11 +1,30 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Réinitialisation de mot de passe!
+{% block title %}Réinitialisation du mot de passe!
 {% endblock %}
 
 {% block body %}
+
 	{{ form_start(resetForm) }}
-	{{ form_row(resetForm.new_password) }}
-	<button type="submit">Réinitialiser le mot de passe</button>
-	{{ form_end(resetForm) }}
-{% endblock %}
+	<div class="bg-pink-400"></br>
+	<h1 href="{{path('app_memory')}}" class="text-5xl font-semibold text-center bg-pink-400 tracking-widest text-pink-900 uppercase focus:outline-none focus:shadow-outline">Vide-cerveau</h1>
+
+	<div class="min-h-screen bg-pink-400 flex justify-center items-center">
+		<div class="absolute w-60 h-60 rounded-xl bg-yellow-300 -top-5 -left-16 z-0 transform rotate-45 hidden md:block"></div>
+		<div class="absolute w-48 h-48 rounded-xl bg-yellow-300 -bottom-6 -right-10 transform rotate-12 hidden md:block"></div>
+		<div class="py-12 px-12 bg-white rounded-2xl shadow-xl z-20">
+			<div>
+				<h1 class="text-3xl font-bold text-center mb-4 cursor-pointer">Mot de passe oublié</h1>
+			</div>
+			<div class="space-y-4">
+				{{ form_row(resetForm.password) }}
+			</div>
+			<div class="text-center mt-6">
+				<button type="submit" class="py-4 px-2 w-70 text-xl text-white bg-pink-400 rounded-2xl">Réinitialiser son mot de passe</button>
+			</div>
+		</div>
+		<div class="w-40 h-40 absolute bg-yellow-300 rounded-full top-0 right-12 hidden md:block"></div>
+		<div class="w-20 h-40 absolute bg-yellow-300 rounded-full bottom-20 left-10 transform rotate-45 hidden md:block"></div>
+	</div>
+</div>
+{{ form_end(resetForm) }}{% endblock %}

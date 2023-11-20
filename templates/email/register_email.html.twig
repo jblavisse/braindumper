@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription 
+{% block title %}Inscription
 {% endblock %}
 
 {% block body %}
-	<!-- component -->
+	
 	<section class="max-w-2xl px-6 py-8 mx-auto bg-white">
 
 		<main class="mt-8">
@@ -16,7 +16,7 @@
 								Il ne vous reste plus qu'à confirmer votre adresse mail !
 								Pour cela, suivez le lien ci-dessous !
 				<button class="px-6 py-2 mt-8 text-sm font-medium tracking-wider text-black capitalize transition-colors duration-300 transform bg-pink-600 rounded-lg hover:bg-pink-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-					<a href="{{ absolute_url(path('verify_user', {token: token})) }}">Lien</a>
+					<a href="{{ absolute_url(path('verify_user', {token: token})) }}">{{ absolute_url(path('verify_user', {token: token})) }}</a>
 				</button>
 			</p>
 

@@ -15,8 +15,9 @@ class ResetPasswordFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('plainPassword', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'mapped' => false,
+                'label'=> ["Entrez votre mot de passe"],
                 'attr' => [
                     'autocomplete' => 'new-password',
                     'class' => 'block text-sm py-3 px-4 rounded-lg w-full border outline-none',
