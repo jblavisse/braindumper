@@ -29,7 +29,7 @@ function deleteMemory(url, dataId) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+                                                                document.addEventListener('DOMContentLoaded', function () {
 
     const deleteButtons = document.getElementsByClassName('delete-button');
     
@@ -53,27 +53,37 @@ document.addEventListener('DOMContentLoaded', () => {
   
         const url = memoryContainer.dataset.url;
         const dataId = memoryContainer.dataset.id;
+        const urlTypes = memoryContainer.dataset.urlTypes;
       
       if (event.target.matches('.memory-title, .memory-description')) {
-        transformToEditable(memoryContainer);
+        transformToEditable(memoryContainer, urlTypes);
       } else if (event.target.matches('.save-button')) {
         saveChanges(memoryContainer, url, dataId);
       }
     });
   });
   
-  function transformToEditable(container) {
+  async function transformToEditable(container, urlTypes) {
     const title = container.querySelector('.memory-title').textContent;
     const description = container.querySelector('.memory-description').textContent;
     
-    const classTitle = "edit-title text-base font-bold text-navy-700 border border-pink-400 py-1 px-1";
-    const classDescription = "edit-description text-base text-navy-700 border border-pink-400 p-3";
+    const classTitle = "block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
+    const classDescription = "block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
+    const classDropdown = "block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
     const classButton = "save-button text-white absolute w-1/7 right-6 bg-pink-400 hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-4 py-2";
+    
+    
+    
+    const typesResponse = await fetch(urlTypes);
+    const types = await typesResponse.json();
       
     container.innerHTML = `
         <input type="text" class="${classTitle}" value="${title}">
         <textarea class="${classDescription}">${description}</textarea>
-        <button class="${classButton}">Save</button>`;
+        <select class="${classDropdown}">
+            ${types.map(type => `<option>${type}</option>`).join('')}
+        </select>
+        <button class="${classButton}">Enregistrer</button>`;
   }
   
   async function saveChanges(container, url, dataId) {

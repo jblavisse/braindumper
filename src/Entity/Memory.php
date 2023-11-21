@@ -32,6 +32,16 @@ class Memory
     #[ORM\ManyToOne(targetEntity:"App\Entity\User", inversedBy: 'memories')]
     private ?User $user = null;
 
+    #[ORM\ManyToMany(targetEntity:"App\Entity\Category", inversedBy: 'memories')]
+    #[ORM\JoinTable(name:"memories_categories",
+         joinColumns:@ORM\JoinColumn(name:"memory_id", referencedColumnName:"id"),
+         inverseJoinColumns:@ORM\JoinColumn(name:"category_id", referencedColumnName:"id")
+     )]
+    private ?\Doctrine\Common\Collections\Collection $category = null;
+
+    #[ORM\ManyToOne(targetEntity:"App\Entity\Type", inversedBy: 'memories')]
+    private ?Type $type = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +79,30 @@ class Memory
     public function setUser(User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,6 +10,9 @@ use App\Repository\MemoryRepository;
 use App\Entity\Memory;
 use App\Form\AddMemoryType;
 use App\Repository\UserRepository;
+use App\Entity\Category;
+use App\Entity\Type;
+use App\Repository\TypeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,8 +31,8 @@ class MemoryController extends AbstractController
 
 
     #[Route('/', name: 'app_memory')]
-    #[IsGranted('ROLE_USER', message:"Vous devez être connecté(e) !")]
-    public function show(MemoryRepository $memoryRepository, UserRepository $userRepository, Request $request): Response
+    #[IsGranted('ROLE_USER', message: "Vous devez être connecté(e) !")]
+    public function show(MemoryRepository $memoryRepository, UserRepository $userRepository, TypeRepository $typeRepository, CategoryRepository $categoryRepository, Request $request): Response
     {
         $memories = $memoryRepository
             ->findAll();
@@ -86,7 +90,10 @@ class MemoryController extends AbstractController
 
         $newTitle = $requestData['title'] ?? null;
         $newDescription = $requestData['description'] ?? null;
-        
+        // $newType = $requestData['type'] ?? null;
+        // $newCategory = $requestData['category'] ?? null;
+
+
         if ($newTitle !== null) {
             $memory->setTitle($newTitle);
         }
@@ -94,6 +101,15 @@ class MemoryController extends AbstractController
         if ($newDescription !== null) {
             $memory->setDescription($newDescription);
         }
+
+        // if ($newType !== null) {
+        //     $memory->setType($newType);
+        // }
+    
+        // if ($newCategory !== null) {
+        //     $memory->setCategory($newCategory); 
+        // }
+    
 
         $entityManager->persist($memory);
         $entityManager->flush();
@@ -104,8 +120,12 @@ class MemoryController extends AbstractController
                 'id' => $memory->getId(),
                 'title' => $memory->getTitle(),
                 'description' => $memory->getDescription(),
+                // 'type'=> $memory->getType(),
+                // 'category'=> $memory->getCategory(),
                 'newTitle' => $newTitle,
                 'newDescription' => $newDescription,
+                // 'newCategory'=> $newCategory,
+                // 'newType' => $newType,
                 'request' => $request
             ]
         ];
