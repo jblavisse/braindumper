@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte créé à cette adresse mail !')]
@@ -29,6 +30,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Length(
+        min: 8,
+        minMessage: "Le mot de passe doit faire au moins {{ limit }} caractères",
+
+    )]
+    #[Assert\Regex(
+        pattern: "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W]).+$/",
+        message: "Le mot de passe doit contenir au moins une majuscule, un caractère spécial et un chiffre. ",
+    )]
     private ?string $password = null;
 
     #[ORM\Column(length: 100)]
@@ -41,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $memories;
 
 
-    #[ORM\Column(type: "string", length: 100)]
+    #[ORM\Column(type: "string")]
     private $resetToken;
 
     public function __construct()

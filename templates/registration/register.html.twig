@@ -21,9 +21,7 @@
 			<div class="space-y-4">
 				{{form_row(registrationForm.firstname)}}
 				{{ form_row(registrationForm.email) }}
-				{{ form_row(registrationForm.plainPassword, {
-                    label: 'Password'
-                }) }}
+				{{ form_row(registrationForm.password) }}
 				{{ form_row(registrationForm.agreeTerms) }}
 			</div>
 			<div class="text-center mt-6">
