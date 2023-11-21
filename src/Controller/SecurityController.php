@@ -97,7 +97,7 @@ class SecurityController extends AbstractController
         if ($resetForm->isSubmitted() && $resetForm->isValid()) {
             dump($resetForm->getErrors(true, false));
             $user->setResetToken('');
-            $user->setPasswordHash(
+            $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,
                     $resetForm->get('password')->getData()
