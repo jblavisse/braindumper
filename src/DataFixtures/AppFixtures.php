@@ -72,20 +72,22 @@ class AppFixtures extends Fixture
         for ($j = 1; $j < 10; $j++) {
             $typesKey = 'type_' . $j;
             $userReferenceKey = 'user_' . $j;
-            $categoryKey = 'category_' . $j;
-            $user = $this->getReference($userReferenceKey);
+
             $type = $this->getReference($typesKey);
-            $category = $this->getReference($categoryKey);
+            $user = $this->getReference($userReferenceKey);
             for ($i = 1; $i < 10; $i++) {
-                $memory = new Memory();
-                $memory->setTitle($faker->title);
-                // $memory->setDescription($faker->description);
-                $memory->setUser($user);
-                $memory->setType($type);
-                $memory->setCategory($category);
+                $categoryKey = 'category_' . $i;
+                if ($this->hasReference($categoryKey)) {
+                    $category = $this->getReference($categoryKey);
+                    $memory = new Memory();
+                    $memory->setTitle($faker->title);
+                    // $memory->setDescription($faker->description);
+                    $memory->setUser($user);
+                    $memory->setType($type);
+                    $memory->setCategory($category);
 
-                $manager->persist($memory);
-
+                    $manager->persist($memory);
+                }
             }
         }
         $manager->flush();
@@ -102,7 +104,8 @@ class AppFixtures extends Fixture
 
             $manager->persist($category);
             $this->addReference($memoriesKey, $category);
-            $manager->flush();
+
         }
+        $manager->flush();
     }
 }

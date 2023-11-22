@@ -29,7 +29,7 @@ function deleteMemory(url, dataId) {
     }
 }
 
-                                                                document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
     const deleteButtons = document.getElementsByClassName('delete-button');
     
@@ -47,49 +47,43 @@ function deleteMemory(url, dataId) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded event fired');
     document.addEventListener('click', event => {
+        console.log('bouton cliqué')
       const memoryContainer = event.target.closest('.memory-container');
       if (!memoryContainer) return;
   
         const url = memoryContainer.dataset.url;
         const dataId = memoryContainer.dataset.id;
-        const urlTypes = memoryContainer.dataset.urlTypes;
       
       if (event.target.matches('.memory-title, .memory-description')) {
-        transformToEditable(memoryContainer, urlTypes);
+        transformToEditable(memoryContainer);
       } else if (event.target.matches('.save-button')) {
         saveChanges(memoryContainer, url, dataId);
       }
     });
   });
   
-  async function transformToEditable(container, urlTypes) {
+  async function transformToEditable(container) {
     const title = container.querySelector('.memory-title').textContent;
     const description = container.querySelector('.memory-description').textContent;
     
-    const classTitle = "block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
-    const classDescription = "block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
-    const classDropdown = "block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
+    const classTitle = "edit-title block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
+    const classDescription = "edit-description block text-sm py-3 px-4 rounded-lg w-full border border-pink-400 outline-none";
     const classButton = "save-button text-white absolute w-1/7 right-6 bg-pink-400 hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-4 py-2";
-    
-    
-    
-    const typesResponse = await fetch(urlTypes);
-    const types = await typesResponse.json();
+  
       
     container.innerHTML = `
         <input type="text" class="${classTitle}" value="${title}">
         <textarea class="${classDescription}">${description}</textarea>
-        <select class="${classDropdown}">
-            ${types.map(type => `<option>${type}</option>`).join('')}
-        </select>
         <button class="${classButton}">Enregistrer</button>`;
   }
   
-  async function saveChanges(container, url, dataId) {
+async function saveChanges(container, url, dataId) {
+
     const updatedTitle = container.querySelector('.edit-title').value;
     const updatedDescription = container.querySelector('.edit-description').value;
-  
+
 
     try {
         const response = await fetch(url, {
@@ -97,7 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title: updatedTitle, description: updatedDescription })
         });
-        if (!response.ok) throw new Error('Failed to update');
+        if (!response.ok) {
+            if (response.status === 422) {
+                const errorData = await response.json();
+                console.error('Erreur de validation:', errorData);
+            } else {
+                throw new Error('Failed to update');
+            }
+        }
         const classTitle = "memory-title text-base font-bold text-navy-700 ";
         const classDescription = "memory-description text-base text-navy-700 ";
         const classButton = "delete-button text-white absolute right-2.5 bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1"
@@ -121,3 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Erreur:', error);
     }
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM chargé!');
+  
+    const closeButton = document.querySelector('.close-button');
+  
+    if (closeButton) {
+      closeButton.addEventListener('click', () => {
+        console.log('Bouton de fermeture cliqué!');
+  
+        const alertContainer = closeButton.closest('.alert-container');
+  
+        if (alertContainer) {
+          console.log('Élément d\'alerte trouvé:', alertContainer);
+          alertContainer.style.display = 'none'; // ou alertContainer.remove() pour le supprimer du DOM
+        }
+      });
+    }
+  });
+  

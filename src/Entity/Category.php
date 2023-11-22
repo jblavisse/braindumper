@@ -18,7 +18,7 @@ class Category
     #[ORM\Column(length: 150, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(mappedBy: 'category', targetEntity: Memory::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Memory::class)]
     private Collection $memories;
 
     public function __construct()

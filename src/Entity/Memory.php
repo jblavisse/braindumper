@@ -32,12 +32,8 @@ class Memory
     #[ORM\ManyToOne(targetEntity:"App\Entity\User", inversedBy: 'memories')]
     private ?User $user = null;
 
-    #[ORM\ManyToMany(targetEntity:"App\Entity\Category", inversedBy: 'memories')]
-    #[ORM\JoinTable(name:"memories_categories",
-         joinColumns:@ORM\JoinColumn(name:"memory_id", referencedColumnName:"id"),
-         inverseJoinColumns:@ORM\JoinColumn(name:"category_id", referencedColumnName:"id")
-     )]
-    private ?\Doctrine\Common\Collections\Collection $category = null;
+    #[ORM\ManyToOne(targetEntity:"App\Entity\Category", inversedBy: 'memories')]
+    private ?Category $category = null;
 
     #[ORM\ManyToOne(targetEntity:"App\Entity\Type", inversedBy: 'memories')]
     private ?Type $type = null;
