@@ -37,6 +37,8 @@ class MemoryController extends AbstractController
         $memories = $memoryRepository
             ->findAll();
         $user = $this->getUser();
+        $types = $typeRepository->findAll();
+        $categories = $categoryRepository->findAll();
 
         $memory = new Memory();
         $memoryForm = $this->createForm(AddMemoryType::class, $memory);
@@ -55,9 +57,30 @@ class MemoryController extends AbstractController
         }
 
 
-        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'user' => $user, 'memoryForm' => $memoryForm->createView()]);
+        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'donneesType' => $types, 'donneesCategory' => $categories, 'user' => $user, 'memoryForm' => $memoryForm->createView()]);
 
     }
+
+  
+    #[Route("/update_memory_type", name:"update_memory_type", methods:"POST")]
+    public function updateMemoryType(Request $request, MemoryRepository $memoryRepository, int $id): Response
+    {
+        $selectedType = $request->getContent();
+        $selectedType = json_decode($selectedType, true)['selected_type'];
+
+        $memories = $this->entityManager->getRepository(Memory::class)->find($id);
+
+        if (!$memories) {
+            return $this->json(['message' => 'Erreur: Type de mémoire non trouvé'], 404);
+        }
+        $memories->setType($selectedType);
+
+        $this->entityManager->persist($memories);
+        $this -> entityManager->flush();
+
+        return $this->json(['message' => 'Mise à jour réussie']);
+    }
+
 
     #[Route('/memories/{id}', name: 'memories_delete', methods: ['delete'])]
     public function delete(EntityManagerInterface $entityManager, int $id): JsonResponse
@@ -105,11 +128,11 @@ class MemoryController extends AbstractController
         // if ($newType !== null) {
         //     $memory->setType($newType);
         // }
-    
+
         // if ($newCategory !== null) {
         //     $memory->setCategory($newCategory); 
         // }
-    
+
 
         $entityManager->persist($memory);
         $entityManager->flush();

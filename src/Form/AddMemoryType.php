@@ -22,12 +22,12 @@ class AddMemoryType extends AbstractType
         $builder->add('title', options: [
             'label' => 'Nom du Memory',
             'attr' => [
-                'class' => 'border p-2 rounded-md focus:outline-none focus:ring focus:border-blue-300',
+                'class' => 'border w-1/2 p-2 rounded-md focus:outline-none focus:ring focus:border-pink-300',
             ],
         ])
             ->add('description', options: [
                 'attr' => [
-                    'class' => 'w-full border p-2 rounded-md focus:outline-none focus:ring focus:border-blue-300',
+                    'class' => 'w-full border p-2 rounded-md focus:outline-none focus:ring focus:border-pink-300',
                 ],
             ]);
     }

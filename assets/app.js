@@ -106,12 +106,24 @@ async function saveChanges(container, url, dataId) {
             <div class="${classDescription}">${updatedDescription}</div>
             <div class="delete-button-container">
 			    <button class="${classButton}" type="button" data-id=${dataId} data-path="${dataPath}">X</button>
-		    </div>`;
+		    </div>
+            <button id="buttonmodal" class="text-white absolute right-2.5 bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+            </svg>
+        </button>`;
         const deleteButton = container.querySelector('.delete-button');
         deleteButton.addEventListener('click', () => {
             deleteMemory(dataPath, dataId);
         });
-    
+        
+        const button = document.getElementById('buttonmodal')
+        const modal = document.getElementById('modal')
+        button.addEventListener('click', () => {
+            modal.classList.add('scale-100');
+        }
+        )
+
         const json = await response.json();
         console.log(json);
     } catch (error) {
@@ -130,9 +142,103 @@ async function saveChanges(container, url, dataId) {
   
         if (alertContainer) {
           console.log('Élément d\'alerte trouvé:', alertContainer);
-          alertContainer.style.display = 'none'; // ou alertContainer.remove() pour le supprimer du DOM
+          alertContainer.style.display = 'none';
         }
       });
     }
   });
-  
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('buttonmodal')
+    const closebutton = document.getElementById('closebutton')
+    const modal = document.getElementById('modal')
+
+    button.addEventListener('click', () => {
+        modal.classList.add('scale-100');
+    });
+
+    closebutton.addEventListener('click', () => {
+        console.log('Close button clicked');
+        modal.classList.remove('scale-100');
+    });
+})
+
+
+document.addEventListener('DOMContentLoaded', () => {
+        const dropdownButton = document.getElementById('dropdown-button-type');
+        const dropdownMenu = document.getElementById('dropdown-menu-type');
+        let isDropdownOpen = false; 
+
+        function toggleDropdown() {
+            isDropdownOpen = !isDropdownOpen;
+            if (isDropdownOpen) {
+                dropdownMenu.classList.remove('hidden');
+            } else {
+                dropdownMenu.classList.add('hidden');
+            }
+        }
+
+        toggleDropdown();
+
+        dropdownButton.addEventListener('click', toggleDropdown);
+
+        document.addEventListener('click', (event) => {
+            if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add('hidden');
+                isDropdownOpen = false;
+            }
+        });
+})
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdownButton = document.getElementById('dropdown-button-category');
+    const dropdownMenu = document.getElementById('dropdown-menu-category');
+    let isDropdownOpen = false; 
+
+    function toggleDropdown() {
+        isDropdownOpen = !isDropdownOpen;
+        if (isDropdownOpen) {
+            dropdownMenu.classList.remove('hidden');
+        } else {
+            dropdownMenu.classList.add('hidden');
+        }
+    }
+
+    toggleDropdown();
+
+    dropdownButton.addEventListener('click', toggleDropdown);
+
+    document.addEventListener('click', (event) => {
+        if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.add('hidden');
+            isDropdownOpen = false;
+        }
+    });
+})
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const dropdownButton = document.getElementById("dropdown-button-type");
+
+    dropdownButton.addEventListener("click", function () {
+        fetch('/update_memory_type', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                selected_type: dropdownButton.dataset.selectedType,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+});
