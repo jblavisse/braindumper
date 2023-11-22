@@ -32,10 +32,13 @@ class MemoryCrudController extends AbstractCrudController
             IdField::new('id', 'Id')->hideOnForm(),
             TextField::new('title', 'Titre'),
             TextEditorField::new('description', 'Description'),
-            AssociationField::new('category', 'Nom de la catégorie')->hideOnForm()
+            AssociationField::new('user',"Email de l'utilisateur")
+            ->setCrudController(UserCrudController::class)
+            ->setFormTypeOption('choice_label', 'email'),
+            AssociationField::new('category', 'Nom de la catégorie')
                 ->setCrudController(CategoryCrudController::class)
                 ->setFormTypeOption('choice_label', 'name'), 
-            AssociationField::new('type', 'Nom du type')->hideOnForm()
+            AssociationField::new('type', 'Nom du type')
                 ->setCrudController(TypeCrudController::class) 
                 ->setFormTypeOption('choice_label', 'name'),
         ];

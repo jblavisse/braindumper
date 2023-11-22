@@ -192,4 +192,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->resetToken = $resetToken;
         return $this;
     }
+    public function __toString(): string
+    {
+        return $this->email;
+    }
+    
 }
