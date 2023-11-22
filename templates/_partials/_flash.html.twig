@@ -1,4 +1,4 @@
-{% for color, textColor, messages in app.flashes %}
+{% for color, textColor, messages in app_flashes %}
 	{% for message in messages%}
 		<div class="max-w-xs bg-{{color}} text-sm text-{{textColor}} rounded-md shadow-lg mb-3 ml-3" role="alert">
 			<div class="flex p-4">

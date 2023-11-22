@@ -40,16 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         deleteButton.addEventListener('click', function () {
             deleteMemory(dataPath, dataId);
-            console.log('Bouton cliqué !');
         });
     });
 });
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded event fired');
     document.addEventListener('click', event => {
-        console.log('bouton cliqué')
       const memoryContainer = event.target.closest('.memory-container');
       if (!memoryContainer) return;
   
@@ -113,7 +110,6 @@ async function saveChanges(container, url, dataId) {
         const deleteButton = container.querySelector('.delete-button');
         deleteButton.addEventListener('click', () => {
             deleteMemory(dataPath, dataId);
-            console.log('Bouton cliqué !');
         });
     
         const json = await response.json();
@@ -124,8 +120,6 @@ async function saveChanges(container, url, dataId) {
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM chargé!');
-  
     const closeButton = document.querySelector('.close-button');
   
     if (closeButton) {

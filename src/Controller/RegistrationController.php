@@ -89,6 +89,7 @@ class RegistrationController extends AbstractController
 
             if ($user && !$user->getIsVerified()) {
                 $user->setIsVerified(true);
+                $user -> getIsVerified();
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $this->addFlash('success', 'Votre email a bien été vérifié, votre compte est activée');

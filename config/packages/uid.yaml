@@ -1,0 +1,14 @@
+framework:
+    uid:
+        default_uuid_version: 7
+        time_based_uuid_version: 7
+
+# config/packages/easy_admin.yaml
+easy_admin:
+    site_name: "Mon Panel d'Administration"
+    design:
+        brand_color: '#3498db'
+    entities:
+        User:
+            class: App\Entity\User
+
