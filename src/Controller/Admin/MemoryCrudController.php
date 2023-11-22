@@ -29,11 +29,15 @@ class MemoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-            AssociationField::new('category'),
-            AssociationField::new('type'),
+            IdField::new('id', 'Id')->hideOnForm(),
+            TextField::new('title', 'Titre'),
+            TextEditorField::new('description', 'Description'),
+            AssociationField::new('category', 'Nom de la catégorie')->hideOnForm()
+                ->setCrudController(CategoryCrudController::class)
+                ->setFormTypeOption('choice_label', 'name'), 
+            AssociationField::new('type', 'Nom du type')->hideOnForm()
+                ->setCrudController(TypeCrudController::class) 
+                ->setFormTypeOption('choice_label', 'name'),
         ];
     }
     
