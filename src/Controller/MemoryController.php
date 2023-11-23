@@ -61,25 +61,80 @@ class MemoryController extends AbstractController
 
     }
 
-  
-    #[Route("/update_memory_type", name:"update_memory_type", methods:"POST")]
+
+    #[Route("/update_memory_type/{id}", name: "update_memory_type", methods: "POST")]
     public function updateMemoryType(Request $request, MemoryRepository $memoryRepository, int $id): Response
     {
-        $selectedType = $request->getContent();
-        $selectedType = json_decode($selectedType, true)['selected_type'];
 
-        $memories = $this->entityManager->getRepository(Memory::class)->find($id);
+        $memory = $this->entityManager->getRepository(Memory::class)->find($id);
 
-        if (!$memories) {
-            return $this->json(['message' => 'Erreur: Type de mémoire non trouvé'], 404);
+
+        if (!$memory) {
+            return $this->json('No project found for id' . $id, 404);
         }
-        $memories->setType($selectedType);
 
-        $this->entityManager->persist($memories);
-        $this -> entityManager->flush();
+        $newTypeId = $request->request->get('id');
+        $requestData = json_decode($request->getContent(), true);
+        $newTypeId = $requestData['id'] ?? null;
 
-        return $this->json(['message' => 'Mise à jour réussie']);
+        $type = null;
+        if ($newTypeId !== null) {
+            $type = $this->entityManager->getRepository(Type::class)->find($newTypeId);
+        }
+        if ($type instanceof Type) {
+            $memory->setType($type);
+
+            $this->entityManager->persist($memory);
+            $this->entityManager->flush();
+
+            $data = [
+                'id' => $memory->getId(),
+                'newType' => $type->getName(),
+            ];
+
+            return $this->json($data);
+        } else {
+            return $this->json(['message' => 'Invalid or missing type ID'], 400);
+        }
     }
+
+
+    #[Route("/update_memory_category/{id}", name: "update_memory_category", methods: "POST")]
+    public function updateMemoryCategory(Request $request, MemoryRepository $memoryRepository, int $id): Response
+    {
+
+        $memory = $this->entityManager->getRepository(Memory::class)->find($id);
+
+
+        if (!$memory) {
+            return $this->json('No project found for id' . $id, 404);
+        }
+
+        $newCategoryId = $request->request->get('id');
+        $requestData = json_decode($request->getContent(), true);
+        $newCategoryId = $requestData['id'] ?? null;
+
+        $category = null;
+        if ($newCategoryId !== null) {
+            $category = $this->entityManager->getRepository(Category::class)->find($newCategoryId);
+        }
+        if ($category instanceof Category) {
+            $memory->setCategory($category);
+
+            $this->entityManager->persist($memory);
+            $this->entityManager->flush();
+
+            $data = [
+                'id' => $memory->getId(),
+                'newCategory' => $category->getName(),
+            ];
+
+            return $this->json($data);
+        } else {
+            return $this->json(['message' => 'Invalid or missing type ID'], 400);
+        }
+    }
+
 
 
     #[Route('/memories/{id}', name: 'memories_delete', methods: ['delete'])]
@@ -113,8 +168,6 @@ class MemoryController extends AbstractController
 
         $newTitle = $requestData['title'] ?? null;
         $newDescription = $requestData['description'] ?? null;
-        // $newType = $requestData['type'] ?? null;
-        // $newCategory = $requestData['category'] ?? null;
 
 
         if ($newTitle !== null) {
@@ -124,14 +177,6 @@ class MemoryController extends AbstractController
         if ($newDescription !== null) {
             $memory->setDescription($newDescription);
         }
-
-        // if ($newType !== null) {
-        //     $memory->setType($newType);
-        // }
-
-        // if ($newCategory !== null) {
-        //     $memory->setCategory($newCategory); 
-        // }
 
 
         $entityManager->persist($memory);
@@ -143,12 +188,8 @@ class MemoryController extends AbstractController
                 'id' => $memory->getId(),
                 'title' => $memory->getTitle(),
                 'description' => $memory->getDescription(),
-                // 'type'=> $memory->getType(),
-                // 'category'=> $memory->getCategory(),
                 'newTitle' => $newTitle,
                 'newDescription' => $newDescription,
-                // 'newCategory'=> $newCategory,
-                // 'newType' => $newType,
                 'request' => $request
             ]
         ];

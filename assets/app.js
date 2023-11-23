@@ -1,3 +1,4 @@
+import { async } from 'regenerator-runtime';
 import './styles/app.scss';
 
 function deleteMemory(url, dataId) {
@@ -152,11 +153,16 @@ async function saveChanges(container, url, dataId) {
 document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById('buttonmodal')
     const closebutton = document.getElementById('closebutton')
+    const closebutton2 = document.getElementById('closebutton2')
     const modal = document.getElementById('modal')
 
     button.addEventListener('click', () => {
         modal.classList.add('scale-100');
     });
+
+    closebutton2.addEventListener('click', () => {
+        modal.classList.remove('scale-100');
+    })
 
     closebutton.addEventListener('click', () => {
         console.log('Close button clicked');
@@ -164,81 +170,142 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 })
 
+let isDropdownOpenType = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
-        const dropdownButton = document.getElementById('dropdown-button-type');
-        const dropdownMenu = document.getElementById('dropdown-menu-type');
-        let isDropdownOpen = false; 
+        const dropdownButtonType = document.getElementById('dropdown-button-type');
+        const dropdownMenuType = document.getElementById('dropdown-menu-type');
 
         function toggleDropdown() {
-            isDropdownOpen = !isDropdownOpen;
-            if (isDropdownOpen) {
-                dropdownMenu.classList.remove('hidden');
+            isDropdownOpenType = !isDropdownOpenType;
+            if (isDropdownOpenType) {
+                dropdownMenuType.classList.remove('hidden');
             } else {
-                dropdownMenu.classList.add('hidden');
+                dropdownMenuType.classList.add('hidden');
             }
         }
 
         toggleDropdown();
 
-        dropdownButton.addEventListener('click', toggleDropdown);
+        dropdownButtonType.addEventListener('click', toggleDropdown);
 
         document.addEventListener('click', (event) => {
-            if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.add('hidden');
-                isDropdownOpen = false;
+            if (!dropdownButtonType.contains(event.target) && !dropdownMenuType.contains(event.target)) {
+                dropdownMenuType.classList.add('hidden');
+                isDropdownOpenType = false;
             }
         });
-})
+    
+    const dropdownItemsType = document.querySelectorAll('[name="selected_type"]');
+    
+    dropdownItemsType.forEach(item => {
+        item.addEventListener('click', handleDropdownItemClickType);
+    });
+});
+
+async function handleDropdownItemClickType(event) {
+
+    console.log('On rentre dans la fonction')
+    const selectedType = event.target.innerText;
+
+    const selectedTypeId = event.target.getAttribute('data-id');
+    const url = event.target.getAttribute('data-url')
+    console.log(url);
 
 
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: selectedTypeId, name: selectedType })
+        });
+        if (!response.ok) {
+            if (response.status === 422) {
+                const errorData = await response.json();
+                console.error('Erreur de validation:', errorData);
+            } else {
+                throw new Error('Failed to update');
+            }
+        }
+                const dropdownButtonType = document.getElementById('dropdown-button-type');
+                const dropdownMenuType = document.getElementById('dropdown-menu-type');
+                dropdownButtonType.innerText = `Type: ${selectedType}`;
+                dropdownMenuType.classList.add('hidden');
+                isDropdownOpenType = false;
+
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+  }
+
+
+let isDropdownOpenCategory = false; 
 document.addEventListener('DOMContentLoaded', () => {
-    const dropdownButton = document.getElementById('dropdown-button-category');
-    const dropdownMenu = document.getElementById('dropdown-menu-category');
-    let isDropdownOpen = false; 
+    const dropdownButtonCategory = document.getElementById('dropdown-button-category');
+    const dropdownMenuCategory = document.getElementById('dropdown-menu-category');
+    
 
     function toggleDropdown() {
-        isDropdownOpen = !isDropdownOpen;
-        if (isDropdownOpen) {
-            dropdownMenu.classList.remove('hidden');
+        isDropdownOpenCategory = !isDropdownOpenCategory;
+        if (isDropdownOpenCategory) {
+            dropdownMenuCategory.classList.remove('hidden');
         } else {
-            dropdownMenu.classList.add('hidden');
+            dropdownMenuCategory.classList.add('hidden');
         }
     }
 
     toggleDropdown();
 
-    dropdownButton.addEventListener('click', toggleDropdown);
+    dropdownButtonCategory.addEventListener('click', toggleDropdown);
 
     document.addEventListener('click', (event) => {
-        if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-            dropdownMenu.classList.add('hidden');
-            isDropdownOpen = false;
+        if (!dropdownButtonCategory.contains(event.target) && !dropdownMenuCategory.contains(event.target)) {
+            dropdownMenuCategory.classList.add('hidden');
+            isDropdownOpenCategory = false;
         }
+    });
+
+    const dropdownItemsCategory = document.querySelectorAll('[name="selected_category"]');
+    dropdownItemsCategory.forEach(item => {
+        item.addEventListener('click', handleDropdownItemClickCategory);
     });
 })
 
+async function handleDropdownItemClickCategory(event) {
+
+    console.log('On rentre dans la fonction')
+    const selectedCategory = event.target.innerText;
+
+    const selectedCategoryId = event.target.getAttribute('data-id');
+    const url = event.target.getAttribute('data-url')
+    console.log(url);
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const dropdownButton = document.getElementById("dropdown-button-type");
-
-    dropdownButton.addEventListener("click", function () {
-        fetch('/update_memory_type', {
+    try {
+        const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                selected_type: dropdownButton.dataset.selectedType,
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: selectedCategoryId, name: selectedCategory })
         });
-    });
-});
+        if (!response.ok) {
+            if (response.status === 422) {
+                const errorData = await response.json();
+                console.error('Erreur de validation:', errorData);
+            } else {
+                throw new Error('Failed to update');
+            }
+        }
+                const dropdownButtonCategory = document.getElementById('dropdown-button-category');
+                const dropdownMenuCategory = document.getElementById('dropdown-menu-category');
+                dropdownButtonCategory.innerText = `Catégorie: ${selectedCategory}`;
+                dropdownMenuCategory.classList.add('hidden');
+                isDropdownOpenCategory = false;
+
+        const json = await response.json();
+        console.log(json);
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+  }
