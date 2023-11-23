@@ -99,27 +99,29 @@ async function saveChanges(container, url, dataId) {
         }
         const classTitle = "memory-title text-base font-bold text-navy-700 ";
         const classDescription = "memory-description text-base text-navy-700 ";
-        const classButton = "delete-button text-white absolute right-2.5 bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1"
+        const classButton = "delete-button text-white bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1"
         const dataPath = "/memories/" + dataId;   
         
         container.innerHTML = `
             <h3 class="${classTitle}">${updatedTitle}</h3>
             <div class="${classDescription}">${updatedDescription}</div>
+            <div class="flex items-center justify-between absolute right-4 gap-5">
             <div class="delete-button-container">
 			    <button class="${classButton}" type="button" data-id=${dataId} data-path="${dataPath}">X</button>
 		    </div>
-            <button id="buttonmodal" class="text-white absolute right-2.5 bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1" type="button">
+            <button data-id=${dataId} class="buttonmodal text-white bg-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-1" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
             </svg>
-        </button>`;
+        </button>
+        </div>`;
         const deleteButton = container.querySelector('.delete-button');
         deleteButton.addEventListener('click', () => {
             deleteMemory(dataPath, dataId);
         });
         
-        const button = document.getElementById('buttonmodal')
-        const modal = document.getElementById('modal')
+        const button = container.querySelector('.buttonmodal')
+        const modal = document.querySelector('.modal')
         button.addEventListener('click', () => {
             modal.classList.add('scale-100');
         }
@@ -149,59 +151,79 @@ async function saveChanges(container, url, dataId) {
     }
   });
 
-
 document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementById('buttonmodal')
-    const closebutton = document.getElementById('closebutton')
-    const closebutton2 = document.getElementById('closebutton2')
-    const modal = document.getElementById('modal')
+    const buttons = document.querySelectorAll('.buttonmodal');
+    const closeButtons = document.querySelectorAll('.closebutton');
+    const closeButtons2 = document.querySelectorAll('.closebutton2');
 
-    button.addEventListener('click', () => {
-        modal.classList.add('scale-100');
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const modalId = button.dataset.id;
+            const modal = document.querySelector(`.modal-${modalId}`);
+            modal.classList.add('scale-100');
+        });
     });
 
-    closebutton2.addEventListener('click', () => {
-        modal.classList.remove('scale-100');
-    })
+    closeButtons2.forEach((closeButton2) => {
+        closeButton2.addEventListener('click', () => {
+            const modalId = closeButton2.dataset.id;
+            const modal = document.querySelector(`.modal-${modalId}`);
+            modal.classList.remove('scale-100');
+        });
+    });
 
-    closebutton.addEventListener('click', () => {
-        console.log('Close button clicked');
-        modal.classList.remove('scale-100');
+    closeButtons.forEach((closeButton) => {
+        closeButton.addEventListener('click', () => {
+            const modalId = closeButton.dataset.id;
+            const modal = document.querySelector(`.modal-${modalId}`);
+            modal.classList.remove('scale-100');
+        });
     });
 })
 
 let isDropdownOpenType = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
-        const dropdownButtonType = document.getElementById('dropdown-button-type');
-        const dropdownMenuType = document.getElementById('dropdown-menu-type');
+    const dropdownButtons = document.querySelectorAll('.dropdown-button-type');
+    const dropdownMenus = document.querySelectorAll('.dropdown-menu-type');
 
-        function toggleDropdown() {
-            isDropdownOpenType = !isDropdownOpenType;
-            if (isDropdownOpenType) {
-                dropdownMenuType.classList.remove('hidden');
-            } else {
-                dropdownMenuType.classList.add('hidden');
-            }
+    function toggleDropdownType(menu) {
+        const isOpen = !menu.classList.contains('hidden');
+    
+    dropdownMenus.forEach((dropdownMenu) => {
+        if (dropdownMenu !== menu) {
+            dropdownMenu.classList.add('hidden');
         }
+    });
 
-        toggleDropdown();
-
-        dropdownButtonType.addEventListener('click', toggleDropdown);
+    if (!isOpen) {
+        menu.classList.remove('hidden');
+        isDropdownOpenType = true;
+    } else {
+        isDropdownOpenType = false;
+    }
+}
+    dropdownButtons.forEach((dropdownButton) => {
+        const menu = dropdownButton.nextElementSibling; 
+        dropdownButton.addEventListener('click', () => {
+            console.log('Bouton cliqué')
+            toggleDropdownType(menu);
+        });
 
         document.addEventListener('click', (event) => {
-            if (!dropdownButtonType.contains(event.target) && !dropdownMenuType.contains(event.target)) {
-                dropdownMenuType.classList.add('hidden');
-                isDropdownOpenType = false;
+            if (!dropdownButton.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.add('hidden');
             }
         });
-    
+    });
+
     const dropdownItemsType = document.querySelectorAll('[name="selected_type"]');
-    
+
     dropdownItemsType.forEach(item => {
         item.addEventListener('click', handleDropdownItemClickType);
     });
 });
+
 
 async function handleDropdownItemClickType(event) {
 
@@ -227,11 +249,21 @@ async function handleDropdownItemClickType(event) {
                 throw new Error('Failed to update');
             }
         }
-                const dropdownButtonType = document.getElementById('dropdown-button-type');
-                const dropdownMenuType = document.getElementById('dropdown-menu-type');
-                dropdownButtonType.innerText = `Type: ${selectedType}`;
-                dropdownMenuType.classList.add('hidden');
-                isDropdownOpenType = false;
+
+        
+        const id = event.target.getAttribute('data-idM');
+        console.log(id)
+
+        const dropdownButtonType = document.querySelector(`.dropdown-button-type-${id}`);
+        const dropdownMenusType = document.querySelectorAll('.dropdown-menu-type');
+        
+        dropdownButtonType.innerText = `Type: ${selectedType}`;
+        
+        dropdownMenusType.forEach((dropdownMenuType) => {
+            dropdownMenuType.classList.add('hidden');
+        })
+                
+        isDropdownOpenType = false;
 
         const json = await response.json();
         console.log(json);
@@ -243,35 +275,45 @@ async function handleDropdownItemClickType(event) {
 
 let isDropdownOpenCategory = false; 
 document.addEventListener('DOMContentLoaded', () => {
-    const dropdownButtonCategory = document.getElementById('dropdown-button-category');
-    const dropdownMenuCategory = document.getElementById('dropdown-menu-category');
+    const dropdownButtonsCategory = document.querySelectorAll('.dropdown-button-category');
+    const dropdownMenusCategory = document.querySelectorAll('.dropdown-menu-category');
+
+    function toggleDropdownCategory(menu) {
+        const isOpen = !menu.classList.contains('hidden');
     
-
-    function toggleDropdown() {
-        isDropdownOpenCategory = !isDropdownOpenCategory;
-        if (isDropdownOpenCategory) {
-            dropdownMenuCategory.classList.remove('hidden');
-        } else {
+    dropdownMenusCategory.forEach((dropdownMenuCategory) => {
+        if (dropdownMenuCategory !== menu) {
             dropdownMenuCategory.classList.add('hidden');
         }
+    });
+
+    if (!isOpen) {
+        menu.classList.remove('hidden');
+        isDropdownOpenCategory = true;
+    } else {
+        isDropdownOpenCategory = false;
     }
+}
+    dropdownButtonsCategory.forEach((dropdownButtonCategory) => {
+        const menu = dropdownButtonCategory.nextElementSibling; 
+        dropdownButtonCategory.addEventListener('click', () => {
+            console.log('Bouton cliqué')
+            toggleDropdownCategory(menu);
+        });
 
-    toggleDropdown();
-
-    dropdownButtonCategory.addEventListener('click', toggleDropdown);
-
-    document.addEventListener('click', (event) => {
-        if (!dropdownButtonCategory.contains(event.target) && !dropdownMenuCategory.contains(event.target)) {
-            dropdownMenuCategory.classList.add('hidden');
-            isDropdownOpenCategory = false;
-        }
+        document.addEventListener('click', (event) => {
+            if (!dropdownButtonCategory.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
     });
 
     const dropdownItemsCategory = document.querySelectorAll('[name="selected_category"]');
+
     dropdownItemsCategory.forEach(item => {
         item.addEventListener('click', handleDropdownItemClickCategory);
     });
-})
+});
 
 async function handleDropdownItemClickCategory(event) {
 
@@ -297,10 +339,17 @@ async function handleDropdownItemClickCategory(event) {
                 throw new Error('Failed to update');
             }
         }
-                const dropdownButtonCategory = document.getElementById('dropdown-button-category');
-                const dropdownMenuCategory = document.getElementById('dropdown-menu-category');
-                dropdownButtonCategory.innerText = `Catégorie: ${selectedCategory}`;
-                dropdownMenuCategory.classList.add('hidden');
+        const id = event.target.getAttribute('data-idM');
+        console.log(id)
+
+        const dropdownButtonCategory = document.querySelector(`.dropdown-button-category-${id}`);
+        const dropdownMenusCategory = document.querySelectorAll('.dropdown-menu-category');
+        
+        dropdownButtonCategory.innerText = `Catégorie: ${selectedCategory}`;
+        
+        dropdownMenusCategory.forEach((dropdownMenuCategory) => {
+            dropdownMenuCategory.classList.add('hidden');
+        })
                 isDropdownOpenCategory = false;
 
         const json = await response.json();
