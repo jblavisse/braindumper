@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Security;
 
 
 class MemoryController extends AbstractController
@@ -32,18 +33,27 @@ class MemoryController extends AbstractController
 
     #[Route('/', name: 'app_memory')]
     #[IsGranted('ROLE_USER', message: "Vous devez être connecté(e) !")]
-    public function show(MemoryRepository $memoryRepository, UserRepository $userRepository, TypeRepository $typeRepository, CategoryRepository $categoryRepository, Request $request): Response
-    {
-        $memories = $memoryRepository
-            ->findAll();
-        $user = $this->getUser();
+    public function show(
+        MemoryRepository $memoryRepository,
+        TypeRepository $typeRepository,
+        CategoryRepository $categoryRepository,
+        Request $request,
+        Security $security
+    ): Response {
+        $users = $this->getUser();
         $types = $typeRepository->findAll();
         $categories = $categoryRepository->findAll();
+        $dataMemories = $memoryRepository->findAll();
+        $user = $security->getUser();
+        $category = [];
+
+        $groupedMemories = $memoryRepository->findByUserGroupedByCategories($user);
+
+
 
         $memory = new Memory();
         $memoryForm = $this->createForm(AddMemoryType::class, $memory);
         $memoryForm->handleRequest($request);
-
 
         if ($memoryForm->isSubmitted() && $memoryForm->isValid()) {
             $memory = $memoryForm->getData();
@@ -53,13 +63,18 @@ class MemoryController extends AbstractController
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_memory');
-
         }
 
-
-        return $this->render('memory/memory.html.twig', ['donnees' => $memories, 'donneesType' => $types, 'donneesCategory' => $categories, 'user' => $user, 'memoryForm' => $memoryForm->createView()]);
-
+        return $this->render('memory/memory.html.twig', [
+            'donnees' => $dataMemories,
+            'groupedMemories' => $groupedMemories,
+            'types' => $types,
+            'categories' => $categories,
+            'user' => $users,
+            'memoryForm' => $memoryForm->createView()
+        ]);
     }
+
 
 
     #[Route("/update_memory_type/{id}", name: "update_memory_type", methods: "POST")]

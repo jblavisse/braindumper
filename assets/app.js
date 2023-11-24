@@ -357,4 +357,34 @@ async function handleDropdownItemClickCategory(event) {
     } catch (error) {
         console.error('Erreur:', error);
     }
-  }
+}
+  
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.buttonmodal-category');
+    const closeButtons = document.querySelectorAll('.closebutton-category');
+    const closeButtons2 = document.querySelectorAll('.closebutton2-category');
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const modal = document.querySelector('.modal-category');
+            modal.classList.add('scale-100');
+        });
+    });
+
+    closeButtons2.forEach((closeButton2) => {
+        closeButton2.addEventListener('click', () => {
+            const modal = document.querySelector(`.modal-category`);
+            modal.classList.remove('scale-100');
+        });
+    });
+
+    closeButtons.forEach((closeButton) => {
+        closeButton.addEventListener('click', () => {
+            const modal = document.querySelector(`.modal-category`);
+            modal.classList.remove('scale-100');
+        });
+    });
+})
+
